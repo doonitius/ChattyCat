@@ -14,9 +14,20 @@ const port = process.env.PORT || 3000;
 const server = http.createServer(app);
 const io = socketio(server);
 
-app.get('/index', (req, res) => {
-    res.send("index at " + port);
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/view/view.html')
 })
+
+io.on('connection', (socket) => {
+    //console.log('user connected');
+    socket.broadcast.emit('hi user');
+    socket.on('chat message', (msg) => {
+        io.emit('chat message', msg);
+    });
+    // socket.on('disconnect', () => {
+    //     console.log('user disconnected');
+    // });
+});
 
 server.listen(port, () => {
     console.log('Server is running on port ' + port)});
