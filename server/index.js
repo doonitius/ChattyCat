@@ -3,6 +3,9 @@ const app = express();
 const socketio = require('socket.io');
 const http = require('http');
 const cors = require('cors');
+const mongoose = require('mongoose');
+
+require("dotenv").config();
 
 app.use(cors());
 
@@ -18,6 +21,8 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/view/view.html')
 })
 
+app.use('/api/', require('./model/profile'))
+
 io.on('connection', (socket) => {
     //console.log('user connected');
     socket.broadcast.emit('hi user');
@@ -28,6 +33,12 @@ io.on('connection', (socket) => {
     //     console.log('user disconnected');
     // });
 });
+
+mongoose.connect(process.env.dbConnection, 
+    { useNewUrlParser: true, 
+        useUnifiedTopology: true }, () =>
+    console.log('connected to DB')
+    );
 
 server.listen(port, () => {
     console.log('Server is running on port ' + port)});
