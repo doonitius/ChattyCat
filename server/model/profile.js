@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const profileSchema = mongoose.Schema({
     userID: {
-        type: Number,
+        type: String,
         require: true
     },
     userFName: {
@@ -18,11 +18,11 @@ const profileSchema = mongoose.Schema({
         require: true
     },
     departmentID: {
-        type: Number,
+        type: String,
         require: true
     },
     statusID: {
-        type: Number,
+        type: String,
         require: true
     },
     email: {
@@ -30,7 +30,7 @@ const profileSchema = mongoose.Schema({
         require: true
     },
     positionID: {
-        type: Number,
+        type: String,
         require: true
     }
 })

@@ -21,7 +21,7 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/view/view.html')
 })
 
-app.use('/api/', require('./model/profile'))
+app.use('/api/', require('./test'))
 
 io.on('connection', (socket) => {
     //console.log('user connected');
