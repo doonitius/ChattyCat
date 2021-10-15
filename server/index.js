@@ -25,13 +25,14 @@ app.use('/api/', require('./test'))
 
 io.on('connection', (socket) => {
     //console.log('user connected');
-    socket.broadcast.emit('hi user');
+    socket.emit('message', 'Hi user');
+    socket.broadcast.emit('message', 'User joined');
     socket.on('chat message', (msg) => {
         io.emit('chat message', msg);
     });
-    // socket.on('disconnect', () => {
-    //     console.log('user disconnected');
-    // });
+    socket.on('disconnect', () => {
+        io.emit('message', 'User disconnected');
+    });
 });
 
 mongoose.connect(process.env.dbConnection, 

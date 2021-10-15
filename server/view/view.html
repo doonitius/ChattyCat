@@ -88,6 +88,13 @@
                 messages.appendChild(item);
                 window.scrollTo(0, document.body.scrollHeight);
             });
+
+            socket.on('message', message => {
+                var item = document.createElement('li');
+                item.textContent = message;
+                messages.appendChild(item);
+            })
+
     </script>
 </body>
 </html>
