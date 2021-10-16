@@ -94,8 +94,8 @@ body {
 .btn {
 	cursor: pointer;
 	padding: 5px 15px;
-	background: var(--light-color);
-	color: green;
-	border: 1;
+	background: green;
+	color: white;
+	border: 0;
 	font-size: 17px;
 }

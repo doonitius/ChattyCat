@@ -4,7 +4,7 @@ const profile = require('./model/profile');
 const route = express.Router();
 
 
-route.post('/', async(req, res) => {
+route.post('/test', async(req, res) => {
     console.log('Sending');
     const profileInfo = new profile({
         userID: req.body.userID,

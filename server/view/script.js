@@ -29,9 +29,12 @@ socket.on("chat message", function (msg) {
 socket.on("message", (message) => {
     var item = document.createElement("li");
     item.textContent = message;
-    messages.appendChild(item);
+    message.appendChild(item);
 });
 
 function showMessage(message) {
-
+    var item = document.createElement("li");
+    item.textContent = msg;
+    messages.appendChild(item);
+    window.scrollTo(0, document.body.scrollHeight);
 }
