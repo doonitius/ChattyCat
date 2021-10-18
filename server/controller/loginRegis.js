@@ -14,6 +14,9 @@ exports.register = async (req, res) => {
         employeeID: req.body.employeeID
     });
     const hashedPass = await bcrypt.hash(req.body.password, 10)
+    // if(!hashedPass) {
+    //     return res.status(400).send({ message: "Password"});
+    // }
     const userNamePass = new userPass ({
         userName: req.body.userName,
         password: hashedPass,
@@ -22,9 +25,9 @@ exports.register = async (req, res) => {
     try {
         const saveUserPass = await userNamePass.save();
         const saveProfile = await profileInfo.save();
-        res.status(200).send({saveProfile, saveUserPass})
+        return res.status(200).send({saveProfile, saveUserPass})
     } catch (err) {
-        res.status(400).send({ message: "Error" })
+        return res.status(400).send({ message: "Error" })
     }
 }
 

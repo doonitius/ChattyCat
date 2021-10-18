@@ -11,19 +11,29 @@
 
 <body>
     <main class="join-main">
-        <form action="view.html">
+        <form id="form2">
+            <div class="form-control">
+                <label for="email">Email</label>
+                <input type="text" name="email" id="email" placeholder="Enter email..." required />
+            </div>
+            <div class="form-control">
+                <label for="employeeID">EmployeeID</label>
+                <input type="text" name="employeeID" id="employeeID" placeholder="Enter employeeID..." required />
+            </div>
             <div class="form-control">
                 <label for="username">Username</label>
                 <input type="text" name="username" id="username" placeholder="Enter username..." required />
             </div>
             <div class="form-control">
                 <label for="password">Password</label>
-                <input type="text" name="password" id="password" placeholder="Enter password..." required />
+                <input type="password" name="password" id="password" placeholder="Enter password..." required />
             </div>
             <button type="submit" class="btn">Register</button>
-            <a href="http://localhost:3000/index.html">Log in</a>
+            <a href="http://localhost:3000/login.html">Log in</a>
         </form>
     </main>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/register.js"></script>
 </body>
 
 </html>

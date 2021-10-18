@@ -22,9 +22,8 @@ app.use(express.json());
 const server = http.createServer(app);
 const io = socketio(server);
 
-// app.get('/', (req, res) => {
-//     res.sendFile(__dirname + '/view/view.html')
-// })
+require("./routes/loginRegis")(app);
+require("./routes/authRoute")(app);
 
 app.use(express.static(path.join(__dirname, 'view')));
 
@@ -55,7 +54,7 @@ io.on('connection', (socket) => {
     });
 });
 
-require('./routes/loginRegis')(app);
+
 
 mongoose.connect(process.env.dbConnection, 
     { useNewUrlParser: true, 
