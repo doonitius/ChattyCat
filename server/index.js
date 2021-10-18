@@ -23,7 +23,13 @@ const server = http.createServer(app);
 const io = socketio(server);
 
 require("./routes/loginRegis")(app);
-require("./routes/authRoute")(app);
+// require("./routes/authRoute")(app);
+
+const auth = require("./middleware/auth");
+
+app.post('/main', auth, (req, res) => {
+    res.status(200).send("logged in");
+})
 
 app.use(express.static(path.join(__dirname, 'view')));
 

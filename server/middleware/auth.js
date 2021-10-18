@@ -1,16 +1,19 @@
 const jwt = require('jsonwebtoken');
 
-const validateToken = async (req, res) => {
-    const { authorization } = req.headers;
+const verifyToken = (req, res, next) => {
+    const token = req.headers['x-access-token'];
 
-    if (!authorization) {
-        throw new Error('Invalid authorization');
+    if (!token) {
+        return res.status(403).send("No token");
     }
-
-    const token = authorization.split(' ')[1];
-
-    jwt.verify(token, process.env.TOKEN_SECRET);
+    console.log(token)
+    jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
+        if(err){
+            return res.status(400).send("Invalid token");
+        }
+        next()
+    })
 
 }
 
-module.exports = { validateToken };
+module.exports = verifyToken;
