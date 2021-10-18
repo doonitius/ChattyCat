@@ -34,6 +34,8 @@ io.on('connection', (socket) => {
     // });
 });
 
+require('./routes/loginRegis')(app);
+
 mongoose.connect(process.env.dbConnection, 
     { useNewUrlParser: true, 
         useUnifiedTopology: true }, () =>
