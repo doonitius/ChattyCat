@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const addressSchema = mongoose.Schema({
-    userID: {
+    employeeID: {
         type: String,
         required: true
     },

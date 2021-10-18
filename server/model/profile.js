@@ -1,37 +1,29 @@
 const mongoose = require('mongoose');
 
 const profileSchema = mongoose.Schema({
-    userID: {
-        type: String,
-        require: true
+    employeeID: {
+        type: String
     },
     userFName: {
-        type: String,
-        require: true
+        type: String
     },
     userLName: {
-        type: String,
-        require: true
+        type: String
     },
     tel: {
-        type: String,
-        require: true
+        type: String
     },
     departmentID: {
-        type: String,
-        require: true
+        type: String
     },
     statusID: {
-        type: String,
-        require: true
+        type: String
     },
     email: {
-        type: String,
-        require: true
+        type: String
     },
     positionID: {
-        type: String,
-        require: true
+        type: String
     }
 })
 

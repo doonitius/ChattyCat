@@ -17,6 +17,10 @@ const chatInfoSchema = mongoose.Schema({
     createrID: {
         type: String, 
         required: true
+    },
+    previewChat : {
+        type: String, 
+        required: true
     }
 })
 

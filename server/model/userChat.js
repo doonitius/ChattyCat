@@ -5,7 +5,7 @@ const userChatSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    userID: { 
+    employeeID: { 
         type: String,
         required: true
     }
