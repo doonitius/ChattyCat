@@ -43,7 +43,7 @@ exports.login = async (req, res) => {
         const token = jwt.sign(payload, process.env.TOKEN_SECRET , {
             expiresIn: 86400 
         });
-        return res.status(200).send(token)
+        return res.status(200).header('auth-token', token).send(token)
     } else {
         res.status(400).send({Error: "Invalid password"})
     }

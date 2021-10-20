@@ -24,6 +24,7 @@ const io = socketio(server);
 
 require("./routes/loginRegis")(app);
 // require("./routes/authRoute")(app);
+require("./routes/profile.route")(app);
 
 const auth = require("./middleware/auth");
 
