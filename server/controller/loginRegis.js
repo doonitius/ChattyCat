@@ -42,7 +42,7 @@ exports.login = async (req, res) => {
         return res.status(400).send({Error: "Kuy"})
     }
     const payload = { 
-        userName: validName.userName
+        employeeID: validName.employeeID
     };
     if (await bcrypt.compare(req.body.password, validName.password)) {
         const token = jwt.sign(payload, process.env.TOKEN_SECRET , {

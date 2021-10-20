@@ -8,28 +8,29 @@ const jwt = require('jsonwebtoken')
 
 async function change(re) {
     const token = re.headers['auth-token'];
-    const user = jwt.verify(token, process.env.TOKEN_SECRET);
-    return user;
+    const employee = jwt.verify(token, process.env.TOKEN_SECRET);
+    return employee;
 }
 
-async function editProfile(user, re, res) {
+async function editProfile(employee, re, res) {
     try {
-        await profile.findOneAndUpdate(user, { 
+        await profile.findOneAndUpdate(employee, { 
             $set: { 
                 userFName: re.body.userFName,
                 userLName: re.body.userLName,
                 tel: re.body.tel,
-                email: re.body.email
+                email: re.body.ema
             }
         })
     } catch (err) {
+        console.log("Error")
         return res.status(400).send({ message: "Error can't edit profile" })
     }
 }
 
-async function editAddress(user, re, res) {
+async function editAddress(employee, re, res) {
     try {
-        await addressData.findOneAndUpdate(user, { 
+        await addressData.findOneAndUpdate(employee, { 
             $set: { 
                 zip: re.body.zip,
                 city: re.body.city,
@@ -45,7 +46,7 @@ async function editAddress(user, re, res) {
 exports.edit = async (req, res) => {
     const re = req;
     const response = res;
-    const validName = change(re);
-    await editProfile(validName, re, response);
-    await editAddress(validName, re, response);
+    const validEmployee = change(re);
+    await editProfile(validEmployee, re, response);
+    await editAddress(validEmployee, re, response);
 }
