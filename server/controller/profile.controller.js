@@ -1,19 +1,21 @@
 const userPass = require('../model/userNamePass')
 const profile = require('../model/profile')
+const jwt = require('jsonwebtoken');
 const addressData = require('../model/address')
 const mongoose = require('mongoose')
 const { findOneAndUpdate } = require('../model/profile')
 //mongoose.set('useFindAndModify', false)
 //const getUser = require('../middleware/auth')
 
-async function change() {
+async function change(req, res) {
     const token = req.headers['auth-token'];
     const user = jwt.verify(token, process.env.TOKEN_SECRET);
     return user;
 }
 
 exports.edit = async (req, res) => {
-    const validName = change();
+    console.log('edit', req)
+    const validName = change(req);
     profile.findOneAndUpdate(validName, { 
         $set: { 
             employeeID: req.body.employeeID,
