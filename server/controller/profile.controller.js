@@ -18,7 +18,9 @@ exports.edit = async (req, res) => {
         $set: { 
             employeeID: req.body.employeeID,
             userFName: req.body.userFName,
-            userLName: req.body.userLName
+            userLName: req.body.userLName,
+            tel: req.body.tel,
+            email: req.body.email
         }
     }, function(err) {
         if (err) {
