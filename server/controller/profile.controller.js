@@ -1,8 +1,10 @@
 const profile = require('../model/profile')
+const jwt = require('jsonwebtoken');
 const addressData = require('../model/address')
 // const mongoose = require('mongoose')
 // const { findOneAndUpdate } = require('../model/profile')
-const jwt = require('jsonwebtoken')
+//const mongoose = require('mongoose')
+//const { findOneAndUpdate } = require('../model/profile')
 //mongoose.set('useFindAndModify', false)
 //const getUser = require('../middleware/auth')
 
