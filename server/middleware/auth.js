@@ -10,6 +10,7 @@ const verifyToken = (req, res, next) => {
         if(err){
             return res.status(400).send("Invalid token");
         }
+        req.employeeID = decoded.employeeID;
         next()
     })
 
