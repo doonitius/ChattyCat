@@ -54,7 +54,7 @@ exports.edit = async (req, res) => {
 
 exports.view = async (req, res) => {
     const validEmployee = change(req);
-    let [emp] = Object.entries(validEmployee);
+    let [emp] = Object(validEmployee);
     console.log(emp);
     // const viewProfile = await profile.findOne({employeeID: emp}, { "_id": 0, "__v": 0 });
     // const viewAddress = await addressData.findOne({employeeID: emp}, { "_id": 0, "__v": 0, "employeeID": 0 });
