@@ -1,25 +1,13 @@
 const profile = require('../model/profile')
 const jwt = require('jsonwebtoken');
 const addressData = require('../model/address')
-// const mongoose = require('mongoose')
-// const { findOneAndUpdate } = require('../model/profile')
 //const mongoose = require('mongoose')
-//const { findOneAndUpdate } = require('../model/profile')
 //mongoose.set('useFindAndModify', false)
 //const getUser = require('../middleware/auth')
 
-async function change(re) {
-    const token = re.headers['auth-token'];
-    const employee = jwt.verify(token, process.env.TOKEN_SECRETs);
-    console.log(employee);
-    // const realEmployee = employee.employeeID;
-    // console.log(realEmployee);
-    return employee;
-}
-
-async function editProfile(employee, re, res) {
+async function editProfile(req, res) {
     try {
-        await profile.findOneAndUpdate(employee, { 
+        await profile.findOneAndUpdate({employeeID: req.employeeID}, { 
             $set: { 
                 userFName: re.body.userFName,
                 userLName: re.body.userLName,
@@ -33,9 +21,9 @@ async function editProfile(employee, re, res) {
     }
 }
 
-async function editAddress(employee, re, res) {
+async function editAddress(req, res) {
     try {
-        await addressData.findOneAndUpdate(employee, { 
+        await addressData.findOneAndUpdate({employeeID: req.employeeID}, { 
             $set: { 
                 zip: re.body.zip,
                 city: re.body.city,
@@ -49,20 +37,13 @@ async function editAddress(employee, re, res) {
 }
 
 exports.edit = async (req, res) => {
-    const re = req;
-    const response = res;
-    const validEmployee = change(re);
-    await editProfile(validEmployee, re, response);
-    await editAddress(validEmployee, re, response);
+    await editProfile(req, res);
+    await editAddress(re, res);
 }
 
 exports.view = async (req, res) => {
-    //const validEmployee = change(req);
-    // let [emp] = Object(validEmployee);
-    // console.log(emp);
-    console.log(req.body.employeeID)
-    const viewProfile = await profile.findOne({employeeID: req.body.employeeID}, { "_id": 0, "__v": 0 });
-    const viewAddress = await addressData.findOne({employeeID: req.body.employeeID}, { "_id": 0, "__v": 0, "employeeID": 0 });
+    const viewProfile = await profile.findOne({employeeID: req.employeeID}, { "_id": 0, "__v": 0 });
+    const viewAddress = await addressData.findOne({employeeID: req.employeeID}, { "_id": 0, "__v": 0, "employeeID": 0 });
     if (!viewProfile || !viewAddress) {
         return res.status(404).send({ message: "Can't find profile or address"})
     } 
