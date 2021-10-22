@@ -35,14 +35,24 @@ app.post('/main', auth, (req, res) => {
     res.status(200).send("logged in");
 })
 
-app.use(express.static(path.join(__dirname, 'view')));
+app.get('/', (req, res) => {
+    res.status(200).send("You are now accessing Chatki API");
+})
+
+// app.use(express.static(path.join(__dirname, 'view')));
 
 app.use('/api/', require('./test'))
 
 io.on('connection', (socket) => {
-    socket.on('joinRoom', ({ username, room }) => {
+    console.log("connected");
+    console.log(socket.connected);
+    console.log(socket.handshake.query.username);
+    console.log(socket.handshake.query.room);
+    var username = socket.handshake.query.username;
+    var room = socket.handshake.query.room;
+    socket.on('joinRoom', () => {
         const user = userJoin(socket.id, username, room);
-        
+        console.log(user);
         socket.join(user.room);
         socket.emit('message', 'Hi user '+ user.username);
         socket.broadcast.to(user.room).emit('message', user.username + ' has joined');
@@ -52,7 +62,7 @@ io.on('connection', (socket) => {
     //console.log('user connected');
     socket.on('chat message', (msg) => {
         const user = getCurrentUser(socket.id);
-
+        console.log(user);
         io.to(user.room).emit('chat message', msg);
     });
 
@@ -75,4 +85,6 @@ mongoose.connect(process.env.dbConnection,
 const port = process.env.PORT || 3000;
 
 server.listen(port, () => {
-    console.log('Server is running on port ' + port)});
+    console.log('Server is running on port ' + port)
+    console.log('goto http://localhost:' + port);
+});

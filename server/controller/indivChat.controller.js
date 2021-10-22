@@ -1,7 +1,7 @@
 const indivChat = require('../model/individualChat')
 
 exports.indivChat = async (req, res) => {
-    var checkChat = await indivchat.findOne({employeeID: req.body.employeeID})
+    var checkChat = await indivChat.findOne({employeeID: req.body.employeeID})
     if (!checkChat) {
         const inChat = new indivChat ({
             employeeID: req.body.employeeID
