@@ -5,11 +5,9 @@ const chatInfoSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    // find array
-    // member: {
-    //     type: Array<String>,
-    //     required: true
-    // }
+    member: [{
+        employeeID: String
+    }],
     chatName: { 
         type: String, 
         required: true
