@@ -1,49 +1,51 @@
 const profile = require('../model/profile')
-const jwt = require('jsonwebtoken');
 const addressData = require('../model/address')
-//const mongoose = require('mongoose')
-//mongoose.set('useFindAndModify', false)
-//const getUser = require('../middleware/auth')
 
-async function editProfile(req, res) {
+async function editProfile(req) {
     try {
-        await profile.findOneAndUpdate({employeeID: req.employeeID}, { 
+        await profile.findOneAndUpdate({employeeID: req.body.employeeID}, { 
             $set: { 
-                userFName: re.body.userFName,
-                userLName: re.body.userLName,
-                tel: re.body.tel,
-                email: re.body.ema
+                userLName: req.body.userLName,
+                userFName: req.body.userFName,
+                tel: req.body.tel,
+                email: req.body.email
             }
         })
+        return true;
     } catch (err) {
-        console.log("Error")
-        return res.status(400).send({ message: "Error can't edit profile" })
+        return false;
     }
 }
 
-async function editAddress(req, res) {
+async function editAddress(req) {
     try {
         await addressData.findOneAndUpdate({employeeID: req.employeeID}, { 
             $set: { 
-                zip: re.body.zip,
-                city: re.body.city,
-                street: re.body.street
+                zip: req.zip,
+                city: req.city,
+                street: req.street
             }
         })
-        return res.status(200).send({ message: "Success" })
+        return true;
     } catch (err) {
-        return res.status(400).send({ message: "Error can't edit address" })
+        return false;
     }
 }
 
-exports.edit = async (req, res) => {
-    await editProfile(req, res);
-    await editAddress(re, res);
+exports.edit =  (req, res) => {
+    var editProfileDone = editProfile(req);
+    var editAdderessDone = editAddress(req);
+    if(editProfileDone && editAdderessDone){
+        return res.status(200).send({message: "success edited"});
+    }
+    else{res.status(400).send({message: "failed edited"})}
+
 }
 
 exports.view = async (req, res) => {
-    const viewProfile = await profile.findOne({employeeID: req.employeeID}, { "_id": 0, "__v": 0 });
-    const viewAddress = await addressData.findOne({employeeID: req.employeeID}, { "_id": 0, "__v": 0, "employeeID": 0 });
+    const viewProfile = await profile.findOne({employeeID: req.body.employeeID}, { "_id": 0, "__v": 0 });
+    const viewAddress = await addressData.findOne({employeeID: req.body.employeeID}, { "_id": 0, "__v": 0, "employeeID": 0 });
+    console.log(viewProfile, viewAddress);
     if (!viewProfile || !viewAddress) {
         return res.status(404).send({ message: "Can't find profile or address"})
     } 

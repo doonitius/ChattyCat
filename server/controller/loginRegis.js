@@ -15,9 +15,6 @@ exports.register = async (req, res) => {
         employeeID: req.body.employeeID
     });
     const hashedPass = await bcrypt.hash(req.body.password, 10)
-    // if(!hashedPass) {
-    //     return res.status(400).send({ message: "Password"});
-    // }
     const address = new addressData({
         employeeID: req.body.employeeID,
     })

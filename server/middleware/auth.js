@@ -10,18 +10,10 @@ const verifyToken = (req, res, next) => {
         if(err){
             return res.status(400).send("Invalid token");
         }
-        req.employeeID = decoded.employeeID;
-        //console.log(req.employeeID, decoded.employeeID); //DOOOOOOOO
-        //console.log("decode" + req.employeeID);
+        req.body.employeeID = decoded.employeeID;
         next()
     })
 
-}
-
-const getUser = (req, res) => {
-     const token = req.headers['auth-token'];
-     const user = jwt.verify(token, process.env.TOKEN_SECRET);
-    return user;
 }
 
 module.exports = verifyToken;
