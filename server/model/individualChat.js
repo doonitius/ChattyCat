@@ -8,7 +8,8 @@ const indiChatSchema = mongoose.Schema({
         chatID : String,
         receiverID: String,
         previousMessage: String,
-         }]
+        }]
+    // dont forget to connect with message collection
 })
 
 module.exports = mongoose.model('indivChat', indiChatSchema);

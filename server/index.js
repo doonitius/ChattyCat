@@ -41,15 +41,20 @@ app.get('/', (req, res) => {
 
 // app.use(express.static(path.join(__dirname, 'view')));
 
-app.use('/api/', require('./test'))
+// app.use('/api/', require('./test'))
 
+// check first if ChatID exist, if not, create. 
+// if exist backend send old chat, frontend send parameter 
+// call this from localhost:3000/?username=username&room=room (await this when creating chat room)
 io.on('connection', (socket) => {
     console.log("connected");
     console.log(socket.connected);
     console.log(socket.handshake.query.username);
     console.log(socket.handshake.query.room);
+
     var username = socket.handshake.query.username;
     var room = socket.handshake.query.room;
+
     socket.on('joinRoom', () => {
         const user = userJoin(socket.id, username, room);
         console.log(user);
@@ -63,6 +68,9 @@ io.on('connection', (socket) => {
     socket.on('chat message', (msg) => {
         const user = getCurrentUser(socket.id);
         console.log(user);
+        console.log("message" + msg);
+        // save message to database here
+        // save msg, sender: user.username
         io.to(user.room).emit('chat message', msg);
     });
 
