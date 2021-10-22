@@ -12,6 +12,7 @@ const verifyToken = (req, res, next) => {
         }
         req.employeeID = decoded.employeeID;
         console.log(req.employeeID, decoded.employeeID); //DOOOOOOOO
+        console.log("decode" + req.employeeID);
         next()
     })
 
