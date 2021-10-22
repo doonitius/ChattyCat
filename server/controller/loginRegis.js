@@ -39,7 +39,7 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
     const validName = await userPass.findOne({userName: req.body.userName});
     if (!validName) {
-        return res.status(400).send({Error: "Kuy"})
+        return res.status(400).send({Error: "Don't have this user!"})
     }
     const payload = { 
         employeeID: validName.employeeID
