@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const memberSchema = mongoose.Schema({
     // find array
-    //member
+    //member                ///////////////////////////////////
     userType: {
         type: String,
         required: true

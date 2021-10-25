@@ -34,12 +34,12 @@ async function createChat(req) {
 
 async function addReceiver (req, check) {
     try {
-        const validRe = await indivChat.findOne({employeeID: req.body.employeeID})
-        var individualChat = {chatID: check._id, receiverID: req.body.receiverID}; 
-        validRe.individualChatList.push(individualChat);
+        var indi = {chatID: check._id, receiverID: req.body.receiverID };
+        const validRe = await indivChat.findOneAndUpdate({employeeID: req.body.employeeID},{
+        $push: { individualChatList: indi}})
         console.log(validRe);
         console.log("+++++++++++++++++++++++++++++++++++++++++++++++++");
-        return set;
+        return validRe;
     } catch (err) {
         return false;
     }
@@ -50,13 +50,13 @@ exports.indivChat = async (req, res) => {
     if (!checkChat) {
         var validCreate = await createInChat(req);
     }
-    var valid = await indivChat.find({employeeID: req.body.employeeID, "individualChatList.receiverID": req.body.receiverID}) //////////////////
+    var valid = await indivChat.findOne({employeeID: req.body.employeeID, individualChatList: [{receiverID: req.body.receiverID}]}) //////////////////
     console.log(valid);
     if (!valid) {
-
-        var validGroup = createChat(req);
+        var validGroup = await createChat(req);         ////////////////////////
         if (validCreate && validGroup) {
-            var validAdd = addReceiver(req, validGroup);
+            var validAdd = await addReceiver(req, validGroup);
+            console.log(validAdd);
             if (validAdd) {
                 return res.status(200).send(validAdd)
             }
