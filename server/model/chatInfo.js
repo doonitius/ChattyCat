@@ -2,23 +2,19 @@ const mongoose = require('mongoose');
 
 const chatInfoSchema = mongoose.Schema({
     chatID: {
-        type: String,
-        required: true
+        type: String
     },
     member: [{
         employeeID: String
     }],
     chatName: { 
-        type: String, 
-        required: true
+        type: String
     },
     createrID: {
-        type: String, 
-        required: true
+        type: String 
     },
     previewChat : {
-        type: String, 
-        required: true
+        type: String
     }
 })
 

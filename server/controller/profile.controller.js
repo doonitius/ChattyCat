@@ -19,11 +19,11 @@ async function editProfile(req) {
 
 async function editAddress(req) {
     try {
-        await addressData.findOneAndUpdate({employeeID: req.employeeID}, { 
+        await addressData.findOneAndUpdate({employeeID: req.body.employeeID}, { 
             $set: { 
-                zip: req.zip,
-                city: req.city,
-                street: req.street
+                zip: req.body.zip,
+                city: req.body.city,
+                street: req.body.street
             }
         })
         return true;

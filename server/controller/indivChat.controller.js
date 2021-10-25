@@ -1,16 +1,71 @@
 const indivChat = require('../model/individualChat')
+const chatInfo = require('../model/chatInfo')
+
+async function createInChat (req) {
+    const inChat = new indivChat ({
+        employeeID: req.body.employeeID
+    })
+    try {
+        checkChat = await inChat.save();
+        console.log(checkChat);
+        console.log("----------------------------------------")
+        return checkChat;
+    } catch (err) {
+        return false;
+    }
+}
+
+async function createChat(req) {
+    const chat = new chatInfo ({
+        member: [{
+            employeeID : req.body.receiverID //////////////////////////////////
+        }],
+        createrID: req.body.employeeID
+    })
+    try {
+        const createdChat = await chat.save();
+        console.log(createdChat);
+        console.log("////////////////////////////////////////////////")
+        return createdChat;
+    } catch (err) {
+        return false;
+    }
+}
+
+async function addReceiver (req, check) {
+    try {
+        const validRe = await indivChat.findOne({employeeID: req.body.employeeID})
+        var individualChat = {chatID: check._id, receiverID: req.body.receiverID}; 
+        validRe.individualChatList.push(individualChat);
+        console.log(validRe);
+        console.log("+++++++++++++++++++++++++++++++++++++++++++++++++");
+        return set;
+    } catch (err) {
+        return false;
+    }
+}
 
 exports.indivChat = async (req, res) => {
     var checkChat = await indivChat.findOne({employeeID: req.body.employeeID})
     if (!checkChat) {
-        const inChat = new indivChat ({
-            employeeID: req.body.employeeID
-        })
-        try {
-            checkChat = await inChat.save();
-        } catch (err) {
-            return res.status(404).send({Message: "can't create InChat"})
-        }
+        var validCreate = await createInChat(req);
     }
-    var valid = checkChat.findOne({"individualChatList.receiverID": req.body.receiverID})
+    var valid = await indivChat.find({employeeID: req.body.employeeID, "individualChatList.receiverID": req.body.receiverID}) //////////////////
+    console.log(valid);
+    if (!valid) {
+
+        var validGroup = createChat(req);
+        if (validCreate && validGroup) {
+            var validAdd = addReceiver(req, validGroup);
+            if (validAdd) {
+                return res.status(200).send(validAdd)
+            }
+            return res.status(400).send({message: "Error add rec"})
+        }
+        else {return res.status(400).send({message: "Errrrrr"})}
+    }
+    else {
+        console.log("EIEI")
+        return res.status(200).send(valid)
+    }
 }
