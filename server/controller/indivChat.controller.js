@@ -18,13 +18,16 @@ async function createInChat (req) {
 async function createChat(req) {
     const chat = new chatInfo ({
         member: [{
-            employeeID : req.body.receiverID //////////////////////////////////
+            employeeID : req.body.receiverID 
         }],
         createrID: req.body.employeeID
     })
     try {
         const createdChat = await chat.save();
-        console.log(createdChat);
+        var mem = {employeeID: req.body.employeeID};
+        const updateChat = await chatInfo.findOneAndUpdate({_id: createdChat._id },
+            {$push : {member: mem}})
+        console.log(updateChat);
         console.log("////////////////////////////////////////////////")
         return createdChat;
     } catch (err) {
@@ -49,12 +52,13 @@ exports.indivChat = async (req, res) => {
     var checkChat = await indivChat.findOne({employeeID: req.body.employeeID})
     if (!checkChat) {
         var validCreate = await createInChat(req);
+        checkChat = validCreate;
     }
-    var valid = await indivChat.findOne({employeeID: req.body.employeeID, individualChatList: [{receiverID: req.body.receiverID}]}) //////////////////
+    var valid = await indivChat.findOne({employeeID: req.body.employeeID, individualChatList: [{receiverID: req.body.receiverID}]}) 
     console.log(valid);
     if (!valid) {
-        var validGroup = await createChat(req);         ////////////////////////
-        if (validCreate && validGroup) {
+        var validGroup = await createChat(req);         
+        if (checkChat && validGroup) {                  
             var validAdd = await addReceiver(req, validGroup);
             console.log(validAdd);
             if (validAdd) {
