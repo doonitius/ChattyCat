@@ -45,12 +45,14 @@ exports.edit =  (req, res) => {
 exports.view = async (req, res) => {
     const viewProfile = await profile.findOne({employeeID: req.body.employeeID}, { "_id": 0, "__v": 0 });
     const viewAddress = await addressData.findOne({employeeID: req.body.employeeID}, { "_id": 0, "__v": 0, "employeeID": 0 });
-    console.log(viewProfile, viewAddress);
     if (!viewProfile || !viewAddress) {
         return res.status(404).send({ message: "Can't find profile or address"})
     } 
     try {
-        res.status(200).send({viewProfile, viewAddress});
+        // แก้ให้พรีม//
+        var view = [viewProfile.employeeID, viewProfile.email, viewProfile.tel, viewProfile.userFName, viewProfile.userLName, 
+            viewAddress.city, viewAddress.street, viewAddress.zip];
+        res.status(200).send({view});
     } catch (err) { 
         res.status(400).send(err); 
     }
