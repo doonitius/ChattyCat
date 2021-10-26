@@ -48,6 +48,7 @@ app.get('/', (req, res) => {
 // call this from localhost:3000/?username=username&room=room (await this when creating chat room)
 io.on('connection', (socket) => {
     console.log("connected");
+    console.log(socket);
     console.log(socket.connected);
     console.log(socket.handshake.query.username);
     console.log(socket.handshake.query.room);
