@@ -62,6 +62,7 @@ exports.indivChat = async (req, res) => {
             var validAdd = await addReceiver(req, validGroup);
             console.log(validAdd);
             if (validAdd) {
+                /// create message database
                 return res.status(200).send(validAdd)
             }
             return res.status(400).send({message: "Error add rec"})
