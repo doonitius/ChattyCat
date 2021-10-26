@@ -49,14 +49,8 @@ var clients = {};
 // if exist backend send old chat, frontend send parameter 
 // call this from localhost:3000/?username=username&room=room (await this when creating chat room)
 io.on('connection', (socket) => {
-<<<<<<< HEAD
-    console.log("connected");
-    console.log(socket);
-    console.log(socket.connected);
-=======
     console.log("connected to socket");
     console.log(socket.id, "has joined");
->>>>>>> 9e5b4b295b74590d44d4302aba2cb8d34b2e223b
     console.log(socket.handshake.query.username);
     console.log(socket.handshake.query.room);
 
