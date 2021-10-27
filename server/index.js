@@ -49,6 +49,16 @@ app.get('/', (req, res) => {
 
 var clients = {};
 
+async function saveToPreview (user, msg){
+    try{
+        var getChatInfo = await chatInfo.findOne({chatID: user.room})
+        getChatInfo.previewChat = msg;
+        await getChatInfo.save();
+    } catch(err){
+        throw err;
+    }
+}
+
 async function saveNewMessageRoom(user, msg){
     const newMessage = new chatMessage({
     chatID: user.room,
@@ -61,7 +71,8 @@ async function saveNewMessageRoom(user, msg){
     });
     try {
         const savedMessage = await newMessage.save();
-        console.log(savedMessage)
+        saveToPreview(user, room);
+        console.log(savedMessage);
         return;
     } catch (err) {
         console.log(err)
@@ -80,8 +91,10 @@ async function savemessage(user, msg) {
 
         if(!messageRoomExist){
             saveNewMessageRoom(user, msg);
+            saveToPreview(user, room);
             return;
         }
+
     } catch (err) {
         console.log(err);
         return(err);
