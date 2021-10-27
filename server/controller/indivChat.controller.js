@@ -54,15 +54,15 @@ exports.indivChat = async (req, res) => {
         var validCreate = await createInChat(req);
         checkChat = validCreate;
     }
-    var valid = await indivChat.findOne({employeeID: req.body.employeeID, individualChatList: [{receiverID: req.body.receiverID}]}) 
-    console.log(valid);
+    // {$elemMatch: {name: req.body.username}}
+    var valid = await indivChat.findOne({employeeID: req.body.employeeID, individualChatList: {$elemMatch: {receiverID: req.body.receiverID}}}) 
+    console.log(valid);             
     if (!valid) {
         var validGroup = await createChat(req);         
-        if (checkChat && validGroup) {                  
+        if (checkChat && validGroup) { 
+            // ข้อมูลไปไม่ทัน                 
             var validAdd = await addReceiver(req, validGroup);
-            console.log(validAdd);
             if (validAdd) {
-                /// create message database
                 return res.status(200).send(validAdd)
             }
             return res.status(400).send({message: "Error add rec"})
