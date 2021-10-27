@@ -26,7 +26,6 @@ require("./routes/loginRegis")(app);
 // require("./routes/authRoute")(app);
 require("./routes/profile.route")(app);
 require("./routes/home")(app);
-require("./routes/indivChat")(app);
 //require("./routes/groupChat")(app);
 
 const auth = require("./middleware/auth");
