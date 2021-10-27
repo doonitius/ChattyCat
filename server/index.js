@@ -13,7 +13,8 @@ const {
 } = require('./middleware/users.js');
 
 
-const message = require('./model/message');
+const chatMessage = require('./model/message');
+const chatInfo = require('./model/chatInfo')
 
 require("dotenv").config();
 
@@ -47,6 +48,45 @@ app.get('/', (req, res) => {
 // app.use('/api/', require('./test'))
 
 var clients = {};
+
+async function saveNewMessageRoom(user, msg){
+    const newMessage = new chatMessage({
+    chatID: user.room,
+    message: [
+    {
+        text: msg,
+        sender: user.username,
+    }
+    ]
+    });
+    try {
+        const savedMessage = await newMessage.save();
+        console.log(savedMessage)
+        return;
+    } catch (err) {
+        console.log(err)
+        return;
+    }
+}
+
+async function savemessage(user, msg) {
+    try{
+        var newMessage = {
+            text: msg,
+            sender: user.username
+        }
+        const messageRoomExist = await chatMessage.findOneAndUpdate({chatID: user.room},{
+        $push: { message: newMessage}});
+
+        if(!messageRoomExist){
+            saveNewMessageRoom(user, msg);
+            return;
+        }
+    } catch (err) {
+        console.log(err);
+        return(err);
+    }
+}
 
 
 // check first if ChatID exist, if not, create. 
@@ -92,21 +132,8 @@ io.on('connection', (socket) => {
         console.log("message" + msg);
         // save message to database here
         // save msg, sender: user.username
+        savemessage(user, msg);
         io.to(user.room).emit('chat message', msg);
-
-        // const chatMessage = new message({
-        //     chatID: user.room,
-        //     message: [{
-        //         text: msg,
-        //         sender: user.username
-        //     }]
-        // });
-        // try {
-        //     const savedMessage = await chatMessage.save();
-        //     return res.status(200).json(savedMessage);
-        // } catch (err) {
-        //     return res.status(400).send({ err });
-        // }
     });
 
     socket.on('disconnect', () => {
