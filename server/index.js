@@ -12,6 +12,9 @@ const {
     getRoomUsers
 } = require('./middleware/users.js');
 
+
+const message = require('./model/message');
+
 require("dotenv").config();
 
 app.use(cors());
@@ -26,6 +29,7 @@ require("./routes/loginRegis")(app);
 // require("./routes/authRoute")(app);
 require("./routes/profile.route")(app);
 require("./routes/home")(app);
+require("./routes/chat")(app);
 //require("./routes/groupChat")(app);
 
 const auth = require("./middleware/auth");
@@ -43,6 +47,7 @@ app.get('/', (req, res) => {
 // app.use('/api/', require('./test'))
 
 var clients = {};
+
 
 // check first if ChatID exist, if not, create. 
 // if exist backend send old chat, frontend send parameter 
@@ -88,6 +93,20 @@ io.on('connection', (socket) => {
         // save message to database here
         // save msg, sender: user.username
         io.to(user.room).emit('chat message', msg);
+
+        const chatMessage = new message({
+            chatID: user.room,
+            message: [{
+                text: msg,
+                sender: user.username
+            }]
+        });
+        try {
+            const savedMessage = await chatMessage.save();
+            return res.status(200).json(savedMessage);
+        } catch (err) {
+            return res.status(400).send({ err });
+        }
     });
 
     socket.on('disconnect', () => {
