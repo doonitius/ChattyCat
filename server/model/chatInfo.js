@@ -13,9 +13,10 @@ const chatInfoSchema = mongoose.Schema({
     createrID: {
         type: String 
     },
-    previewChat : {
-        type: String
-    }
+    previewChat : [{
+        text: String,
+        time: Date
+    }]
 })
 
 module.exports = mongoose.model('chatInfo', chatInfoSchema);

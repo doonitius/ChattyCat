@@ -79,7 +79,7 @@ exports.indivChat = async (req, res) => {
     }
     // {$elemMatch: {name: req.body.username}}
     var valid = await indivChat.findOne({employeeID: req.body.employeeID, individualChatList: {$elemMatch: {receiverID: req.body.receiverID}}}) 
-    console.log(valid.individualChatList);             
+    console.log(valid);             
     if (!valid) {
         var validGroup = await createChat(req);         
         if (checkChat && validGroup) { 

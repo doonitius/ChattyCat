@@ -94,19 +94,19 @@ io.on('connection', (socket) => {
         // save msg, sender: user.username
         io.to(user.room).emit('chat message', msg);
 
-        const chatMessage = new message({
-            chatID: user.room,
-            message: [{
-                text: msg,
-                sender: user.username
-            }]
-        });
-        try {
-            const savedMessage = await chatMessage.save();
-            return res.status(200).json(savedMessage);
-        } catch (err) {
-            return res.status(400).send({ err });
-        }
+        // const chatMessage = new message({
+        //     chatID: user.room,
+        //     message: [{
+        //         text: msg,
+        //         sender: user.username
+        //     }]
+        // });
+        // try {
+        //     const savedMessage = await chatMessage.save();
+        //     return res.status(200).json(savedMessage);
+        // } catch (err) {
+        //     return res.status(400).send({ err });
+        // }
     });
 
     socket.on('disconnect', () => {
