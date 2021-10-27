@@ -81,7 +81,6 @@ io.on('connection', (socket) => {
         socket.broadcast.to(user.room).emit('message', user.username + ' has joined');
 
     });
-
     //console.log('user connected');
     socket.on('chat message', (msg) => {
         const user = getCurrentUser(socket.id);
