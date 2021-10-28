@@ -3,9 +3,9 @@ const chatInfo = require('../model/chatInfo')
 
 async function saveToPreview (user, msg){
     try{
-        var text = {text: msg};
+        var text = {text: msg, time: new Date()};
         var getChatInfo = await chatInfo.findOneAndUpdate({_id: user.room},
-            {$set: {previewChat: text, time: new Date()}});
+            {$set: {previewChat: text}});
         console.log(getChatInfo);
     } catch(err){
         throw err;
