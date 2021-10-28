@@ -5,7 +5,7 @@ async function saveToPreview (user, msg){
     try{
         var text = {text: msg};
         var getChatInfo = await chatInfo.findOneAndUpdate({_id: user.room},
-            {$set: {previewChat: text}});
+            {$set: {previewChat: text, time: new Date()}});
         console.log(getChatInfo);
     } catch(err){
         throw err;
