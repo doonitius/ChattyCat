@@ -10,11 +10,15 @@ const {
     getCurrentUser,
     userLeave,
     getRoomUsers
-} = require('./middleware/users.js');
+    } = require('./middleware/users.js');
+const {
+    saveToPreview,
+    saveNewMessageRoom,
+    savemessage
+    } = require('./function.socket/saveMessage');
 
-
-const chatMessage = require('./model/message');
-const chatInfo = require('./model/chatInfo')
+// const chatMessage = require('./model/message');
+// const chatInfo = require('./model/chatInfo')
 
 require("dotenv").config();
 
@@ -48,59 +52,6 @@ app.get('/', (req, res) => {
 // app.use('/api/', require('./test'))
 
 var clients = {};
-
-async function saveToPreview (user, msg){
-    try{
-        var getChatInfo = await chatInfo.findOne({chatID: user.room})
-        getChatInfo.previewChat = msg;
-        await getChatInfo.save();
-    } catch(err){
-        throw err;
-    }
-}
-
-async function saveNewMessageRoom(user, msg){
-    const newMessage = new chatMessage({
-    chatID: user.room,
-    message: [
-    {
-        text: msg,
-        sender: user.username,
-    }
-    ]
-    });
-    try {
-        const savedMessage = await newMessage.save();
-        saveToPreview(user, room);
-        console.log(savedMessage);
-        return;
-    } catch (err) {
-        console.log(err)
-        return;
-    }
-}
-
-async function savemessage(user, msg) {
-    try{
-        var newMessage = {
-            text: msg,
-            sender: user.username
-        }
-        const messageRoomExist = await chatMessage.findOneAndUpdate({chatID: user.room},{
-        $push: { message: newMessage}});
-
-        if(!messageRoomExist){
-            saveNewMessageRoom(user, msg);
-            saveToPreview(user, room);
-            return;
-        }
-
-    } catch (err) {
-        console.log(err);
-        return(err);
-    }
-}
-
 
 // check first if ChatID exist, if not, create. 
 // if exist backend send old chat, frontend send parameter 
@@ -142,7 +93,7 @@ io.on('connection', (socket) => {
     socket.on('chat message', (msg) => {
         const user = getCurrentUser(socket.id);
         console.log(user);
-        console.log("message" + msg);
+        console.log("message " + msg);
         // save message to database here
         // save msg, sender: user.username
         savemessage(user, msg);

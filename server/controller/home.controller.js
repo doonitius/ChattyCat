@@ -71,6 +71,7 @@ async function addChatVerify (req, check) {
     }
 }
 
+// มีงานแก้้
 exports.indivChat = async (req, res) => {
     var checkChat = await userChat.findOne({employeeID: req.body.employeeID})
     if (!checkChat) {
