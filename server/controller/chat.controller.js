@@ -21,11 +21,11 @@ exports.allChat = async (req, res) => {
     for (i = 0; i < chatID.length; i++) {
         previewChat[i] = await chatIn(chatID[i]);
     }
-    console.log(previewChat);
+    console.log(previewChat[1][0]);
     for (i = 0; i < chatID.length; i++) {
-            set.push([previewChat[i], chatName[i], chatID[i]]);
+            set.push([previewChat[i][0].text, chatName[i], chatID[i]]);
         }
     console.log("---------------------------");
     console.log(set);
-    return res.send(set);
+    return res.send({set});
 }
