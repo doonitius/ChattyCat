@@ -19,6 +19,8 @@ async function saveNewMessageRoom(user, msg){
     {
         text: msg,
         sender: user.username,
+        time: new Date()
+
     }
     ]
     });
@@ -36,7 +38,8 @@ async function savemessage(user, msg) {
     try{
         var newMessage = {
             text: msg,
-            sender: user.username
+            sender: user.username,
+            time: new Date()
         }
         const messageRoomExist = await chatMessage.findOneAndUpdate({chatID: user.room},{
         $push: { message: newMessage}});
