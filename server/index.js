@@ -4,7 +4,6 @@ const socketio = require('socket.io');
 const http = require('http');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const path = require('path');
 const {
     userJoin,
     getCurrentUser,
@@ -17,9 +16,6 @@ const {
     savemessage
     } = require('./function.socket/saveMessage');
 
-// const chatMessage = require('./model/message');
-// const chatInfo = require('./model/chatInfo')
-
 require("dotenv").config();
 
 app.use(cors());
@@ -30,27 +26,11 @@ app.use(express.json());
 const server = http.createServer(app);
 const io = socketio(server);
 
-require("./routes/loginRegis")(app);
-// require("./routes/authRoute")(app);
-require("./routes/profile.route")(app);
-require("./routes/home")(app);
-require("./routes/chat")(app);
-//require("./routes/groupChat")(app);
 require("./apiServer");
-
-const auth = require("./middleware/auth");
-
-app.post('/main', auth, (req, res) => {
-    res.status(200).send("logged in");
-})
 
 app.get('/check', (req, res) => {
     res.status(200).send("You are now accessing Chat API");
 })
-
-// app.use(express.static(path.join(__dirname, 'view')));
-
-// app.use('/api/', require('./test'))
 
 var clients = {};
 
