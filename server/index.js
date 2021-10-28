@@ -36,6 +36,7 @@ require("./routes/profile.route")(app);
 require("./routes/home")(app);
 require("./routes/chat")(app);
 //require("./routes/groupChat")(app);
+require("./apiServer");
 
 const auth = require("./middleware/auth");
 
@@ -43,8 +44,8 @@ app.post('/main', auth, (req, res) => {
     res.status(200).send("logged in");
 })
 
-app.get('/', (req, res) => {
-    res.status(200).send("You are now accessing Chatki API");
+app.get('/check', (req, res) => {
+    res.status(200).send("You are now accessing Chat API");
 })
 
 // app.use(express.static(path.join(__dirname, 'view')));
@@ -114,12 +115,14 @@ mongoose.connect(process.env.dbConnection, {
         useNewUrlParser: true,
         useUnifiedTopology: true
     }, () =>
-    console.log('connected to DB')
+    console.log('socket chat connected to DB')
 );
 
 const port = process.env.PORT || 3000;
 
 server.listen(port, () => {
-    console.log('Server is running on port ' + port)
-    console.log('goto http://localhost:' + port);
+    console.log('Chat Server is running on port ' + port)
+    console.log('go to http://localhost:' + port + "/check");
+    console.log("_____________________________________");
+
 });
