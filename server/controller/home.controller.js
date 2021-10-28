@@ -24,17 +24,44 @@ exports.home = async (req, res) => {
     }
 }
 
-async function createUserChat (req) {
+async function createUserOne (emp) {
     const inChat = new userChat ({
-        employeeID: req.body.employeeID
+        employeeID: emp
     })
     try {
         const checkChat = await inChat.save();
         console.log(checkChat);
-        console.log("----------------------------------------")
+        console.log("1--------------------------------------1")
         return checkChat;
     } catch (err) {
         return false;
+    }
+}
+
+async function createUserTwo (emp) {
+    const inChat = new userChat ({
+        employeeID: emp
+    })
+    try {
+        const checkChat = await inChat.save();
+        console.log(checkChat);
+        console.log("2---------------------------------------2")
+        return checkChat;
+    } catch (err) {
+        return false;
+    }
+}
+
+async function createUserChat (req) {
+    var uOne = req.body.employeeID;
+    var uTwo = req.body.receiverID;
+    var createdUserOne = await createUserOne(uOne);
+    var createdUserTwo = await createUserTwo(uTwo);
+    if (createdUserOne && createdUserTwo) {
+        return 1;
+    }
+    else {
+        return 0;
     }
 }
 
@@ -50,15 +77,15 @@ async function createChat(req) {
         var mem = {employeeID: req.body.employeeID};
         const updateChat = await chatInfo.findOneAndUpdate({_id: createdChat._id },
             {$push : {member: mem}})
-        console.log(updateChat);
-        console.log("////////////////////////////////////////////////")
+        // console.log(updateChat);
+        // console.log("////////////////////////////////////////////////")
         return updateChat;
     } catch (err) {
         return false;
     }
 }
 
-async function addChatVerify (req, check) {
+async function  addChatOne (req, check) {
     try {
         var veri = {chatID: check._id, chatName: req.body.chatName };
         const validVeri = await userChat.findOneAndUpdate({employeeID: req.body.employeeID},{
@@ -69,6 +96,40 @@ async function addChatVerify (req, check) {
     } catch (err) {
         return false;
     }
+}
+
+async function addChatTwo (req, check) {
+    const checkName = await userPass.findOne({employeeID: req.body.employeeID})
+    var name = checkName.userName;
+    try {
+        var veri = {chatID: check._id, chatName: name };
+        const validVeri = await userChat.findOneAndUpdate({employeeID: req.body.receiverID}, {
+        $push: { chatVerify: veri}})
+        return validVeri;
+    } catch (err) {
+        return false;
+    }
+}
+
+async function addChatVerify (req, check) {
+    var addedChatOne = await addChatOne(req,check);
+    var addedChatTwo = await addChatTwo(req,check);
+    if (addedChatOne && addedChatTwo) {
+        return 1;
+    }
+    else {
+        return 0; 
+    }
+}
+
+async function chatVerify (req) {
+    var valid = await userChat.findOne({employeeID: req.body.employeeID});
+    for (var i = 0; i < valid.chatVerify.length; i++) {
+        if (valid.chatVerify[i].chatName == req.body.chatName) {
+            var send = valid.chatVerify[i];
+        }
+    }
+    return send; 
 }
 
 // มีงานแก้้
@@ -87,15 +148,15 @@ exports.indivChat = async (req, res) => {
             // ข้อมูลไปไม่ทัน                 
             var validAdd = await addChatVerify(req, validGroup);
             if (validAdd) {
-                var send = await userChat.findOne({employeeID: req.body.employeeID, chatVerify: {$elemMatch: {chatName: req.body.chatName}}});
-                console.log(send);
-                return res.status(200).send(send.chatVerify);
+                var send = await chatVerify(req);
+                return res.status(200).send(send);
             }
             return res.status(400).send({message: "Error add rec"})
         }
         else {return res.status(400).send({message: "Errrrrr"})}
     }
     else {
-        return res.status(200).send(valid.chatVerify)
+        var send = await chatVerify(req);
+        return res.status(200).send(send);
     }
 }
