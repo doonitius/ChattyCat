@@ -24,7 +24,7 @@ exports.home = async (req, res) => {
     }
 }
 
-async function createUserOne (emp) {
+async function createUserChat (emp) {
     const inChat = new userChat ({
         employeeID: emp
     })
@@ -35,33 +35,6 @@ async function createUserOne (emp) {
         return checkChat;
     } catch (err) {
         return false;
-    }
-}
-
-async function createUserTwo (emp) {
-    const inChat = new userChat ({
-        employeeID: emp
-    })
-    try {
-        const checkChat = await inChat.save();
-        console.log(checkChat);
-        console.log("2---------------------------------------2")
-        return checkChat;
-    } catch (err) {
-        return false;
-    }
-}
-
-async function createUserChat (req) {
-    var uOne = req.body.employeeID;
-    var uTwo = req.body.receiverID;
-    var createdUserOne = await createUserOne(uOne);
-    var createdUserTwo = await createUserTwo(uTwo);
-    if (createdUserOne && createdUserTwo) {
-        return 1;
-    }
-    else {
-        return 0;
     }
 }
 
@@ -134,17 +107,22 @@ async function chatVerify (req) {
 
 // มีงานแก้้
 exports.indivChat = async (req, res) => {
-    var checkChat = await userChat.findOne({employeeID: req.body.employeeID})
-    if (!checkChat) {
-        var validCreate = await createUserChat(req);
-        checkChat = validCreate;
+    var checkChatOne = await userChat.findOne({employeeID: req.body.employeeID})
+    var checkChatTwo = await userChat.findOne({employeeID: req.body.receiverID})
+    if (!checkChatOne) {
+        var validCreate = await createUserChat(req.body.employeeID);
+        checkChatOne = validCreate;
+    }
+    if (!checkChatTwo) {
+        var validCreateTwo = await createUserChat(req.body.receiverID)
+        checkChatTwo = validCreateTwo;
     }
     // {$elemMatch: {name: req.body.username}} ส่งuserName เป็น chatName และส่ง receiverIDมาด้วย
     var valid = await userChat.findOne({employeeID: req.body.employeeID, chatVerify: {$elemMatch: {chatName: req.body.chatName}}});
     console.log(valid);             
     if (!valid) {
         var validGroup = await createChat(req);  
-        if (checkChat && validGroup) { 
+        if (checkChatOne && checkChatTwo && validGroup) { 
             // ข้อมูลไปไม่ทัน                 
             var validAdd = await addChatVerify(req, validGroup);
             if (validAdd) {
