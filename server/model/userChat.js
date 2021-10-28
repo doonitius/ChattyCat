@@ -1,13 +1,12 @@
 const mongoose = require('mongoose');
 
 const userChatSchema = mongoose.Schema({
-    chatID: {
-        type: String,
-        required: true
-    },
+    chatVerify: [{
+        chatID: String,
+        chatName: String
+    }],
     employeeID: { 
-        type: String,
-        required: true
+        type: String
     }
 })
 

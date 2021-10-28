@@ -1,5 +1,5 @@
 const message = require('../model/message')
-const indivChat = require('../model/individualChat')
+const userChat = require('../model/userChat')
 const chatInfo = require('../model/chatInfo')
 
 async function chatIn (chatID) {
@@ -8,33 +8,24 @@ async function chatIn (chatID) {
 }
 
 exports.allChat = async (req, res) => {
-    var chat = await indivChat.findOne({employeeID: req.body.employeeID});
-    // console.log("---------------------------")
-    // console.log(chat.individualChatList[1].chatID);
+    var userChatVerify = await userChat.findOne({employeeID: req.body.employeeID});
     var i = 0;
-    var chatIDFind = [];
-    var receiverID = [];
-    var set = [];
-    for (i = 0; i < chat.individualChatList.length; i++) {
-        chatIDFind[i] = chat.individualChatList[i].chatID;
-        receiverID[i] = chat.individualChatList[i].receiverID;
-    }
-    // console.log("---------------------------");
-    // console.log({chatID, receiverID});
-    // for (i = 0; i < chat.individualChatList.length; i++) {
-    //     set.push([chatID[i], receiverID[i]]);
-    // }
-    // // console.log("---------------------------");
-    // console.log(set[0][0]);
     var chatID = [];
-    for (i = 0; i < chatIDFind.length; i++) {
-        chatID[i] = await chatIn(chatIDFind[i]);
+    var chatName = [];
+    var set = [];
+    for (i = 0; i < userChatVerify.chatVerify.length; i++) {
+        chatID[i] = userChatVerify.chatVerify[i].chatID;
+        chatName[i] = userChatVerify.chatVerify[i].chatName;
     }
-    console.log(chatID);
-    for (i = 0; i < chatIDFind.length; i++) {
-            set.push([chatID[i], receiverID[i]]);
+    var previewChat = [];
+    for (i = 0; i < chatID.length; i++) {
+        previewChat[i] = await chatIn(chatID[i]);
+    }
+    console.log(previewChat);
+    for (i = 0; i < chatID.length; i++) {
+            set.push([previewChat[i], chatName[i], chatID[i]]);
         }
     console.log("---------------------------");
     console.log(set);
-    return res.send(chat.individualChatList[1]);
+    return res.send(set);
 }

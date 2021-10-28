@@ -1,5 +1,5 @@
 const userPass = require('../model/userNamePass')
-const indivChat = require('../model/individualChat')
+const userChat = require('../model/userChat')
 const chatInfo = require('../model/chatInfo')
 
 exports.home = async (req, res) => {
@@ -24,12 +24,12 @@ exports.home = async (req, res) => {
     }
 }
 
-async function createInChat (req) {
-    const inChat = new indivChat ({
+async function createUserChat (req) {
+    const inChat = new userChat ({
         employeeID: req.body.employeeID
     })
     try {
-        checkChat = await inChat.save();
+        const checkChat = await inChat.save();
         console.log(checkChat);
         console.log("----------------------------------------")
         return checkChat;
@@ -52,48 +52,49 @@ async function createChat(req) {
             {$push : {member: mem}})
         console.log(updateChat);
         console.log("////////////////////////////////////////////////")
-        return createdChat;
+        return updateChat;
     } catch (err) {
         return false;
     }
 }
 
-async function addReceiver (req, check) {
+async function addChatVerify (req, check) {
     try {
-        var indi = {chatID: check._id, receiverID: req.body.receiverID };
-        const validRe = await indivChat.findOneAndUpdate({employeeID: req.body.employeeID},{
-        $push: { individualChatList: indi}})
-        console.log(validRe);
-        console.log("+++++++++++++++++++++++++++++++++++++++++++++++++");
-        return validRe;
+        var veri = {chatID: check._id, chatName: req.body.chatName };
+        const validVeri = await userChat.findOneAndUpdate({employeeID: req.body.employeeID},{
+        $push: { chatVerify: veri}})
+        // console.log(validVeri);
+        // console.log("+++++++++++++++++++++++++++++++++++++++++++++++++");
+        return validVeri;
     } catch (err) {
         return false;
     }
 }
 
 exports.indivChat = async (req, res) => {
-    var checkChat = await indivChat.findOne({employeeID: req.body.employeeID})
+    var checkChat = await userChat.findOne({employeeID: req.body.employeeID})
     if (!checkChat) {
-        var validCreate = await createInChat(req);
+        var validCreate = await createUserChat(req);
         checkChat = validCreate;
     }
-    // {$elemMatch: {name: req.body.username}}
-    var valid = await indivChat.findOne({employeeID: req.body.employeeID, individualChatList: {$elemMatch: {receiverID: req.body.receiverID}}}) 
+    // {$elemMatch: {name: req.body.username}} ส่งuserName เป็น chatName และส่ง receiverIDมาด้วย
+    var valid = await userChat.findOne({employeeID: req.body.employeeID, chatVerify: {$elemMatch: {chatName: req.body.chatName}}});
     console.log(valid);             
     if (!valid) {
-        var validGroup = await createChat(req);         
+        var validGroup = await createChat(req);  
         if (checkChat && validGroup) { 
             // ข้อมูลไปไม่ทัน                 
-            var validAdd = await addReceiver(req, validGroup);
+            var validAdd = await addChatVerify(req, validGroup);
             if (validAdd) {
-                return res.status(200).send(validAdd)
+                var send = await userChat.findOne({employeeID: req.body.employeeID, chatVerify: {$elemMatch: {chatName: req.body.chatName}}});
+                console.log(send);
+                return res.status(200).send(send.chatVerify);
             }
             return res.status(400).send({message: "Error add rec"})
         }
         else {return res.status(400).send({message: "Errrrrr"})}
     }
     else {
-        console.log("EIEI")
-        return res.status(200).send(valid.individualChatList)
+        return res.status(200).send(valid.chatVerify)
     }
 }
