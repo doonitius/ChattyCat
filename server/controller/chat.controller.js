@@ -21,10 +21,13 @@ exports.allChat = async (req, res) => {
     for (i = 0; i < chatID.length; i++) {
         previewChat[i] = await chatIn(chatID[i]);
     }
-    console.log(previewChat[1]);
+    console.log(previewChat[0][0].text);
     for (i = 0; i < chatID.length; i++) {
-            // set.push([previewChat[i][0].text, previewChat[i][0].time,chatName[i], chatID[i]]);
-            set.push([chatName[i], chatID[i]]);
+            if (previewChat[i][0] == undefined) {
+                continue;
+            }
+            set.push([previewChat[i][0].text, previewChat[i][0].time,chatName[i], chatID[i]]);
+            //set.push([chatName[i], chatID[i]]);
         }
     console.log("---------------------------");
     console.log(set);
