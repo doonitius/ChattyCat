@@ -3,6 +3,9 @@ const userPass = require('../model/userNamePass')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const addressData = require('../model/address')
+const {verifyToken,
+    getRefreshTokens, 
+    setRefreshTokens} = require('../middleware/auth')
 require('dotenv').config()
 
 exports.register = async (req, res) => {
@@ -43,9 +46,11 @@ exports.login = async (req, res) => {
     };
     if (await bcrypt.compare(req.body.password, validName.password)) {
         const token = jwt.sign(payload, process.env.TOKEN_SECRET , {
-            expiresIn: 86400 
+            expiresIn: 600  
         });
-        return res.status(200).header('auth-token', token).send(token)
+        const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET)
+        setRefreshTokens(refreshToken);
+        return res.status(200).header('auth-token', token).header('refresh-token',refreshToken).send({token,refreshToken})
     } else {
         res.status(400).send({Error: "Invalid password"})
     }

@@ -21,7 +21,7 @@ exports.allChat = async (req, res) => {
     for (i = 0; i < chatID.length; i++) {
         previewChat[i] = await chatIn(chatID[i]);
     }
-    console.log(previewChat[0][0].text);
+    //console.log(previewChat[0][0].text);
     for (i = 0; i < chatID.length; i++) {
             if (previewChat[i][0] == undefined) {
                 continue;

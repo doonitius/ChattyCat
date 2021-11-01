@@ -1,6 +1,8 @@
-const verifyToken = require('../middleware/auth')
+const {verifyToken,
+    getRefreshTokens, 
+    setRefreshTokens} = require('../middleware/auth')
 const controller = require('../controller/chat.controller')
 
 module.exports = function (app) {
-    app.get('/chat', verifyToken, controller.allChat);
+    app.get('/chat', getRefreshTokens, verifyToken, controller.allChat);
 }
