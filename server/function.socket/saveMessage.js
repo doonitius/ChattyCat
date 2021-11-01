@@ -2,8 +2,10 @@ const chatMessage = require('../model/message');
 const chatInfo = require('../model/chatInfo')
 
 async function saveToPreview (user, msg){
+    var utc = new Date();
+    utc.setHours( utc.getHours() + 7);
     try{
-        var text = {text: msg, time: new Date()};
+        var text = {text: msg, time: utc};
         var getChatInfo = await chatInfo.findOneAndUpdate({_id: user.room},
             {$set: {previewChat: text}});
         console.log(getChatInfo);
@@ -13,13 +15,17 @@ async function saveToPreview (user, msg){
 }
 
 async function saveNewMessageRoom(user, msg){
+    var utc = new Date();
+    var utcc = new Date();
+    utc.setHours( utc.getHours() + 7);
+    console.log(utcc, utc);
     const newMessage = new chatMessage({
     chatID: user.room,
     message: [
     {
         text: msg,
         sender: user.username,
-        time: new Date()
+        time: utc
 
     }
     ]
@@ -35,11 +41,15 @@ async function saveNewMessageRoom(user, msg){
 }
 
 async function savemessage(user, msg) {
+    var utc = new Date();
+    var utcc = new Date();
+    utc.setHours( utc.getHours() + 7);
+    console.log(utcc, utc);
     try{
         var newMessage = {
             text: msg,
             sender: user.username,
-            time: new Date()
+            time: utc
         }
         const messageRoomExist = await chatMessage.findOneAndUpdate({chatID: user.room},{
         $push: { message: newMessage}});
