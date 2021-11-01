@@ -1,6 +1,7 @@
 const {verifyToken,
     getRefreshTokens, 
-    setRefreshTokens} = require('../middleware/auth')
+    setRefreshTokens,
+    logout} = require('../middleware/auth')
 const controller = require('../controller/chat.controller')
 
 module.exports = function (app) {

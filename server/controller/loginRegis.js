@@ -5,7 +5,8 @@ const jwt = require('jsonwebtoken')
 const addressData = require('../model/address')
 const {verifyToken,
     getRefreshTokens, 
-    setRefreshTokens} = require('../middleware/auth')
+    setRefreshTokens,
+    logout} = require('../middleware/auth')
 require('dotenv').config()
 
 exports.register = async (req, res) => {
@@ -54,4 +55,9 @@ exports.login = async (req, res) => {
     } else {
         res.status(400).send({Error: "Invalid password"})
     }
+}
+
+exports.logout = async (req,res) => {
+    refreshToken = req.headers['refresh-token'];
+    logout(res, refreshToken);
 }
