@@ -49,9 +49,23 @@ exports.view = async (req, res) => {
         return res.status(404).send({ message: "Can't find profile or address"})
     } 
     try {
-        // แก้ให้พรีม//
         var view = [viewProfile.employeeID, viewProfile.email, viewProfile.tel, viewProfile.userFName, viewProfile.userLName, 
             viewAddress.city, viewAddress.street, viewAddress.zip];
+        res.status(200).send({view});
+    } catch (err) { 
+        res.status(400).send(err); 
+    }
+}
+
+exports.viewOther = async (req, res) => {
+    const viewOtherProfile = await profile.findOne({employeeID: req.body.targetID}, { "_id": 0, "__v": 0 });
+    const viewOtherAddress = await addressData.findOne({employeeID: req.body.targetID}, { "_id": 0, "__v": 0, "employeeID": 0 });
+    if (!viewOtherAddress || !viewOtherProfile) {
+        return res.status(404).send({ message: "Can't find profile or address"})
+    }
+    try {
+        var view = [viewOtherProfile.employeeID, viewOtherProfile.email, viewOtherProfile.tel, viewOtherProfile.userFName, viewOtherProfile.userLName, 
+            viewOtherAddress.city, viewOtherAddress.street, viewOtherAddress.zip];
         res.status(200).send({view});
     } catch (err) { 
         res.status(400).send(err); 
