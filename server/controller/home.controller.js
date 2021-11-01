@@ -4,7 +4,6 @@ const chatInfo = require('../model/chatInfo')
 
 exports.home = async (req, res) => {
     const user = await userPass.find({}, { "_id": 0, "__v": 0, "password": 0})
-    //console.log(user)
     var i;
     var name = [];
     var id = [];
@@ -30,8 +29,6 @@ async function createUserChat (emp) {
     })
     try {
         const checkChat = await inChat.save();
-        console.log(checkChat);
-        console.log("1--------------------------------------1")
         return checkChat;
     } catch (err) {
         return false;
@@ -50,8 +47,6 @@ async function createChat(req) {
         var mem = {employeeID: req.body.employeeID};
         const updateChat = await chatInfo.findOneAndUpdate({_id: createdChat._id },
             {$push : {member: mem}})
-        // console.log(updateChat);
-        // console.log("////////////////////////////////////////////////")
         return updateChat;
     } catch (err) {
         return false;
@@ -63,8 +58,6 @@ async function  addChatOne (req, check) {
         var veri = {chatID: check._id, chatName: req.body.chatName };
         const validVeri = await userChat.findOneAndUpdate({employeeID: req.body.employeeID},{
         $push: { chatVerify: veri}})
-        // console.log(validVeri);
-        // console.log("+++++++++++++++++++++++++++++++++++++++++++++++++");
         return validVeri;
     } catch (err) {
         return false;
@@ -105,7 +98,6 @@ async function chatVerify (req) {
     return send; 
 }
 
-// มีงานแก้้
 exports.indivChat = async (req, res) => {
     var checkChatOne = await userChat.findOne({employeeID: req.body.employeeID})
     var checkChatTwo = await userChat.findOne({employeeID: req.body.receiverID})
@@ -136,5 +128,14 @@ exports.indivChat = async (req, res) => {
     else {
         var send = await chatVerify(req);
         return res.status(200).send(send);
+    }
+}
+
+exports.search = async (req, res) => {
+    const searchName = await userPass.find({userName: { $regex: req.body.targetName}});
+    try {
+        return res.status(200).send(searchName);
+    } catch {
+        res.status(400).send({message: Erorr});
     }
 }
