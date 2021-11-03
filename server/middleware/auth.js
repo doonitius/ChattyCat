@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 let refreshTokens = [];
 
 const verifyToken = (req, res, next) => {
-    const token = req.headers['auth-token'];
+    const token = req.body.token;
     if (!token) {
         return res.status(403).send("No token");
     }
@@ -29,9 +29,9 @@ const getRefreshTokens = (req, res, next) => {
         if (err) return res.send(400).send("Erorrrr");
         const payload = {employeeID: user.employeeID};
         const token = jwt.sign(payload, process.env.TOKEN_SECRET , {
-            expiresIn: 600
+            expiresIn: 300
         });
-        res.status(200).header('auth-token', token)
+        req.body.token = token;
         next()
     })
 }

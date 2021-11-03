@@ -47,7 +47,7 @@ exports.login = async (req, res) => {
     };
     if (await bcrypt.compare(req.body.password, validName.password)) {
         const token = jwt.sign(payload, process.env.TOKEN_SECRET , {
-            expiresIn: 600  
+            expiresIn: 300  
         });
         const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET)
         setRefreshTokens(refreshToken);
