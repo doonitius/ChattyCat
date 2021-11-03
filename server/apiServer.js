@@ -25,7 +25,7 @@ app.get("/check", (req, res) => {
 });
 
 mongoose.connect(
-    process.env.dbConnection,
+    process.env.DB_CLUSTER,
     {
         useNewUrlParser: true,
         useUnifiedTopology: true,

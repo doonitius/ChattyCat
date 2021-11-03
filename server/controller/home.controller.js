@@ -4,20 +4,21 @@ const chatInfo = require('../model/chatInfo')
 
 exports.home = async (req, res) => {
     const user = await userPass.find({employeeID: {$ne: req.body.employeeID}}, { "_id": 0, "__v": 0, "password": 0})
-    var i;
-    var name = [];
-    var id = [];
-    for (i = 0; i < user.length; i++) {
-        name[i] = user[i].userName;
-        id[i] = user[i].employeeID;
-    }
-    var set = [];
-    for (i = 0; i < user.length; i++) {
-        set.push([name[i], id[i]]);
-    }
-    console.log({set})
+    // var i;
+    // var name = [];
+    // var id = [];
+    // for (i = 0; i < user.length; i++) {
+    //     name[i] = user[i].userName;
+    //     id[i] = user[i].employeeID;
+    //     console.log("name" + user[i].userName + " id" + user[i].employeeID)
+    // }
+    // var set = [];
+    // for (i = 0; i < user.length; i++) {
+    //     set.push([name[i], id[i]]);
+    // }
+    // console.log({set})
     try {
-        return res.status(200).send({set})
+        return res.status(200).send({user})
     } catch (err) {
         return res.status(500).send({message: "Error"})
     }

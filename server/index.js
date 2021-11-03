@@ -90,9 +90,11 @@ io.on('connection', (socket) => {
 
 
 
-mongoose.connect(process.env.dbConnection, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
+mongoose.connect(
+    process.env.DB_CLUSTER, 
+    {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
     }, () =>
     console.log('socket chat connected to DB')
 );
