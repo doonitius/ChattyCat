@@ -3,7 +3,7 @@ const userChat = require('../model/userChat')
 const chatInfo = require('../model/chatInfo')
 
 exports.home = async (req, res) => {
-    const user = await userPass.find({}, { "_id": 0, "__v": 0, "password": 0})
+    const user = await userPass.find({employeeID: {$ne: req.body.employeeID}}, { "_id": 0, "__v": 0, "password": 0})
     var i;
     var name = [];
     var id = [];
@@ -15,9 +15,9 @@ exports.home = async (req, res) => {
     for (i = 0; i < user.length; i++) {
         set.push([name[i], id[i]]);
     }
-    console.log(set)
+    console.log({set})
     try {
-        return res.status(200).send(set)
+        return res.status(200).send({set})
     } catch (err) {
         return res.status(500).send({message: "Error"})
     }

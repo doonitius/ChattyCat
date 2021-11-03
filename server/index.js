@@ -76,8 +76,6 @@ io.on('connection', (socket) => {
         const user = getCurrentUser(socket.id);
         console.log(user);
         console.log("message " + msg);
-        // save message to database here
-        // save msg, sender: user.username
         savemessage(user, msg);
         io.to(user.room).emit('chat message', msg);
     });
