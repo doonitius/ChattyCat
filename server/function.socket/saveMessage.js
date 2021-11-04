@@ -16,9 +16,8 @@ async function saveToPreview (user, msg){
 
 async function saveNewMessageRoom(user, msg){
     var utc = new Date();
-    var utcc = new Date();
     utc.setHours( utc.getHours() + 7);
-    console.log(utcc, utc);
+    console.log(utc);
     const newMessage = new chatMessage({
     chatID: user.room,
     message: [
@@ -42,9 +41,8 @@ async function saveNewMessageRoom(user, msg){
 
 async function savemessage(user, msg) {
     var utc = new Date();
-    var utcc = new Date();
     utc.setHours( utc.getHours() + 7);
-    console.log(utcc, utc);
+    console.log(utc);
     try{
         var newMessage = {
             text: msg,
@@ -67,8 +65,19 @@ async function savemessage(user, msg) {
     }
 }
 
+async function pastMessage (user) {
+    console.log("-------Function------");
+    console.log(user);
+    const messageChat = await chatMessage.findOne({chatID: user.room}, {"_id": 0}) .sort({'_id': -1}).limit(50);
+    var ei = messageChat.message;
+    console.log(ei);
+
+    return messageChat.message;
+}
+
 module.exports = {
     saveToPreview,
     saveNewMessageRoom,
-    savemessage
+    savemessage,
+    pastMessage
 };
