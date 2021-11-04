@@ -13,12 +13,21 @@ exports.allChat = async (req, res) => {
         const chatinfo = await chatInfo.findOne({_id: userChatVerify.chatVerify[i].chatID});
         if(chatinfo === undefined) {console.log("sdfsdf");continue;}
         
-        // userChatVerify.chatVerify[i].previewChat = chatinfo.previewChat;
-        Object.assign(userChatVerify.chatVerify[i], chatinfo.previewChat);
+        // userChatVerify.chatVerify[i].previewChat = chatinfo.previewChat[0].text;
+        // Object.assign(userChatVerify.chatVerify[i].previewChat, chatinfo.previewChat);
+        Object.keys(userChatVerify.chatVerify[i]).map(
+            function(object){
+                userChatVerify.chatVerify[i][object]["previewChat"] = chatinfo.previewChat
+            }
+        );
         // console.log(typeof userChatVerify.chatVerify[i].previewChat);
-        console.log(userChatVerify.chatVerify[i]);
+        // console.log("+++++++++++++++++++++++++++++++++++")
+        // console.log(userChatVerify.chatVerify[i].previewChat);
+        // console.log(userChatVerify.chatVerify[i]);
+        // console.log("+++++++++++++++++++++++++++++++++++")
+        // json = JSON.stringify(userChatVerify.chatVerify[i]);
+        // console.log(json);
     }
-    console.log("asdasd");
     // var i = 0;
     // var chatID = [];
     // var chatName = [];
@@ -43,7 +52,6 @@ exports.allChat = async (req, res) => {
     // console.log(set);
     // console.log({userChatVerify});
     // console.log(json(userChatVerify));
-    console.log(userChatVerify.chatVerify);
     getAllChat = userChatVerify.chatVerify;
     return res.status(200).send({ getAllChat });
 }
