@@ -68,11 +68,11 @@ async function savemessage(user, msg) {
 async function pastMessage (user) {
     console.log("-------Function------");
     console.log(user);
-    const messageChat = await chatMessage.findOne({chatID: user.room}, {"_id": 0}) .sort({'_id': -1}).limit(50);
-    var ei = messageChat.message;
-    console.log(ei);
+    const messageChat = await chatMessage.findOne({chatID: user.room}, {"_id": 0});
+    const message = messageChat.message;
+    await message.sort((a,b)=> a.time > b.time && 1 || -1)
 
-    return messageChat.message;
+    return message;
 }
 
 module.exports = {

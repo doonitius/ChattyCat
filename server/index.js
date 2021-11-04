@@ -65,13 +65,13 @@ io.on('connection', (socket) => {
         const user = userJoin(socket.id, username, room);
         console.log(user);
         socket.join(user.room);
-        var message = pastMessage(user);
+        var message = pastMessage(user).then((message) => {
         //socket.emit('message', 'Hi user ' + user.username);
-        console.log("---------");
-        console.log(message);
-        socket.emit('message', message);
-        socket.broadcast.to(user.room).emit('message', user.username + ' has joined');
-
+        console.log("---------")
+        console.log(message)
+        socket.emit('message', message)
+        socket.broadcast.to(user.room).emit('message', user.username + ' has joined')
+        })
     });
     //console.log('user connected');
     socket.on('chat message', (msg) => {
