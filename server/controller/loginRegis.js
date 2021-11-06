@@ -11,8 +11,10 @@ require('dotenv').config()
 
 exports.register = async (req, res) => {
     const validName = await userPass.findOne({userName: req.body.userName});
-    if (validName) {
-        return  res.status(400).send({ message: "Username already exist!" });
+    const validEmail = await profile.findOne({email: req.body.email});
+    const validEmployeeID = await profile.findOne({employeeID: req.body.employeeID});
+    if (validName || validEmail || validEmployeeID) {
+        return  res.status(400).send({ message: "Username or email or employeeID already exist!" });
     }
     const profileInfo = new profile ({
         email: req.body.email,
