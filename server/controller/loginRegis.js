@@ -13,8 +13,21 @@ exports.register = async (req, res) => {
     const validName = await userPass.findOne({userName: req.body.userName});
     const validEmail = await profile.findOne({email: req.body.email});
     const validEmployeeID = await profile.findOne({employeeID: req.body.employeeID});
-    if (validName || validEmail || validEmployeeID) {
-        return  res.status(400).send({ message: "Username or email or employeeID already exist!" });
+    var existFlag = false;
+    if (validName) {
+        res.write(JSON.stringify({userName :"UserName already exist!"}));
+        existFlag = true;
+    }
+    if(validEmail){
+        res.write(JSON.stringify({ email: "Email already exist!" }));
+        existFlag = true;
+    }
+    if(validEmployeeID){
+        res.write(JSON.stringify({ employeeID: "EmployeeID already exist!" }));
+        existFlag = true;
+    }
+    if(existFlag){
+        return res.end();
     }
     const profileInfo = new profile ({
         email: req.body.email,
