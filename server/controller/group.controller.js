@@ -84,6 +84,7 @@ exports.search = async (req, res) => {
     }
 }
 
+ // broken
 exports.invite = async (req, res) => {
     var userCh = await userChat.findOne({employeeID: req.body.targetID})
     if (!userCh) {

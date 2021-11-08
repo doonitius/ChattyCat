@@ -68,8 +68,12 @@ async function savemessage(user, msg) {
 async function pastMessage (user) {
     console.log("-------Function------");
     console.log(user);
+    var message;
     const messageChat = await chatMessage.findOne({chatID: user.room}, {"_id": 0});
-    const message = messageChat.message;
+    if(!messageChat){
+        return message = "start conversation";
+    }
+    message = messageChat.message;
     await message.sort((a,b)=> a.time > b.time && 1 || -1)
 
     return message;

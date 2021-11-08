@@ -37,33 +37,20 @@ var clients = {};
 // if exist backend send old chat, frontend send parameter 
 // call this from localhost:3000/?username=username&room=room (await this when creating chat room)
 io.on('connection', (socket) => {
-    console.log("connected to socket");
-    console.log(socket.id, "has joined");
-    console.log(socket.handshake.query.username);
-    console.log(socket.handshake.query.room);
+    console.log("connected to socket.io");
+    console.log("socket_id: ", socket.id, "has joined");
+    // console.log(socket.handshake.query.username);
+    // console.log(socket.handshake.query.room);
 
-    var username = socket.handshake.query.username;
-    var room = socket.handshake.query.room;
+    // var username = socket.handshake.query.username;
+    // var room = socket.handshake.query.room;
 
-
-    socket.on("signin", (id, targetId) => {
+    // this one work good good now ok
+    socket.on("signin", ({id, targetId}) => {
         console.log("ID:" + id);
         clients[id] = socket;
-        console.log(clients);
+        // console.log(clients);
         const user = userJoin(socket.id, id, targetId);
-        socket.join(user.room);
-        console.log(user);
-    });
-
-    socket.on("message", (msg) => {
-        console.log(msg);
-        let targetId = msg.targetId;
-        if (clients[targetId]) clients[targetId].emit("message", msg);
-    });
-
-    socket.on('joinRoom', () => {
-        const user = userJoin(socket.id, username, room);
-        console.log(user);
         socket.join(user.room);
         pastMessage(user).then((message) => {
         //socket.emit('message', 'Hi user ' + user.username);
@@ -72,8 +59,29 @@ io.on('connection', (socket) => {
         socket.emit('message', message)
         socket.broadcast.to(user.room).emit('message', user.username + ' has joined')
         })
+        // console.log(user);
     });
+
+    socket.on("message", (msg) => {
+        console.log(msg);
+        let targetId = msg.targetId;
+        if (clients[targetId]) clients[targetId].emit("message", msg);
+    });
+
+    // socket.on('joinRoom', () => {
+    //     const user = userJoin(socket.id, username, room);
+    //     console.log(user);
+    //     socket.join(user.room);
+    //     pastMessage(user).then((message) => {
+    //     //socket.emit('message', 'Hi user ' + user.username);
+    //     console.log("---------")
+    //     console.log(message)
+    //     socket.emit('message', message)
+    //     socket.broadcast.to(user.room).emit('message', user.username + ' has joined')
+    //     })
+    // });
     //console.log('user connected');
+
     socket.on('chat message', (msg) => {
         const user = getCurrentUser(socket.id);
         console.log(user);
@@ -83,7 +91,6 @@ io.on('connection', (socket) => {
     });
 
     socket.on('disconnect', () => {
-
         const user = userLeave(socket.id);
         console.log("disconnected");
         io.to(user.room).emit('message', user.username + ' disconnected');
