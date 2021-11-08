@@ -4,8 +4,16 @@ const chatInfo = require('../model/chatInfo')
 
 exports.home = async (req, res) => {
     const user = await userPass.find({employeeID: {$ne: req.body.employeeID}}, { "_id": 0, "__v": 0, "password": 0})
+    const group = await userChat.findOne({employeeID: req.body.employeeID})
+    for (var i = 0; i < group.chatVerify.length; i++)
+    {
+        if (group.chatVerify[i].isGroup == false) {
+            group.chatVerify.splice(i, 1);
+        }
+    }
+    var sendGroup = group.chatVerify;
     try {
-        return res.status(200).send({user})
+        return res.status(200).send({user,sendGroup});
     } catch (err) {
         return res.status(500).send({message: "Error"})
     }
