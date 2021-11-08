@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const userChatSchema = mongoose.Schema({
     chatVerify: [{
         chatID: String,
-        chatName: String
+        chatName: String,
+        isGroup: Boolean
     }],
     employeeID: { 
         type: String

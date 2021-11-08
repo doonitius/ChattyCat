@@ -13,6 +13,9 @@ const chatInfoSchema = mongoose.Schema({
     createrID: {
         type: String 
     },
+    isGroup: {
+        type: Boolean
+    },
     previewChat : [{
         text: String,
         time: Date

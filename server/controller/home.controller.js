@@ -4,19 +4,6 @@ const chatInfo = require('../model/chatInfo')
 
 exports.home = async (req, res) => {
     const user = await userPass.find({employeeID: {$ne: req.body.employeeID}}, { "_id": 0, "__v": 0, "password": 0})
-    // var i;
-    // var name = [];
-    // var id = [];
-    // for (i = 0; i < user.length; i++) {
-    //     name[i] = user[i].userName;
-    //     id[i] = user[i].employeeID;
-    //     console.log("name" + user[i].userName + " id" + user[i].employeeID)
-    // }
-    // var set = [];
-    // for (i = 0; i < user.length; i++) {
-    //     set.push([name[i], id[i]]);
-    // }
-    // console.log({set})
     try {
         return res.status(200).send({user})
     } catch (err) {
@@ -41,7 +28,9 @@ async function createChat(req) {
         member: [{
             employeeID : req.body.receiverID 
         }],
-        createrID: req.body.employeeID
+        createrID: req.body.employeeID,
+        isGroup: false,
+        chatName: req.body.chatName
     })
     try {
         const createdChat = await chat.save();
@@ -56,7 +45,7 @@ async function createChat(req) {
 
 async function  addChatOne (req, check) {
     try {
-        var veri = {chatID: check._id, chatName: req.body.chatName };
+        var veri = {chatID: check._id, chatName: req.body.chatName, isGroup: false };
         const validVeri = await userChat.findOneAndUpdate({employeeID: req.body.employeeID},{
         $push: { chatVerify: veri}})
         return validVeri;
@@ -69,7 +58,7 @@ async function addChatTwo (req, check) {
     const checkName = await userPass.findOne({employeeID: req.body.employeeID})
     var name = checkName.userName;
     try {
-        var veri = {chatID: check._id, chatName: name };
+        var veri = {chatID: check._id, chatName: name, isGroup: false };
         const validVeri = await userChat.findOneAndUpdate({employeeID: req.body.receiverID}, {
         $push: { chatVerify: veri}})
         return validVeri;
@@ -110,13 +99,11 @@ exports.indivChat = async (req, res) => {
         var validCreateTwo = await createUserChat(req.body.receiverID)
         checkChatTwo = validCreateTwo;
     }
-    // {$elemMatch: {name: req.body.username}} ส่งuserName เป็น chatName และส่ง receiverIDมาด้วย
     var valid = await userChat.findOne({employeeID: req.body.employeeID, chatVerify: {$elemMatch: {chatName: req.body.chatName}}});
     console.log(valid);             
     if (!valid) {
         var validGroup = await createChat(req);  
-        if (checkChatOne && checkChatTwo && validGroup) { 
-            // ข้อมูลไปไม่ทัน                 
+        if (checkChatOne && checkChatTwo && validGroup) {                 
             var validAdd = await addChatVerify(req, validGroup);
             if (validAdd) {
                 var send = await chatVerify(req);
@@ -133,10 +120,63 @@ exports.indivChat = async (req, res) => {
 }
 
 exports.search = async (req, res) => {
-    const searchName = await userPass.find({userName: { $regex: req.body.targetName}});
+    const searchName = await userPass.find({userName: { $regex: req.body.targetName,$options: 'i'}}, {"userName": 1, "employeeID": 1, "_id": 0});
+    const searchGroup = await chatInfo.find({chatName: { $regex: req.body.targetName,$options: 'i'}, isGroup: true}, {"chatName": 1})
     try {
-        return res.status(200).send(searchName);
+        return res.status(200).send({searchName, searchGroup});
     } catch {
         res.status(400).send({message: Erorr});
     }
+}
+
+async function makeGroup(req) {
+    const newGroup = new chatInfo({
+        member: [{
+        employeeID: req.body.employeeID
+        }],
+        createrID: req.body.employeeID,
+        isGroup: true,
+        chatName: req.body.chatName
+    })
+    try {
+        const saveGroup = await newGroup.save();
+        return saveGroup;
+    } catch (err) {
+        return false;
+    }
+}
+
+async function addChatVerify(req, group) {
+    var validUserChat = await userChat.findOne({employeeID: req.body.employeeID})
+    if (!validUserChat) {
+        var validCreate = await createUserChat(req.body.employeeID);
+    }
+    if (validCreate || validUserChat) {
+        try {
+            var veri = {chatID: group._id, chatName: req.body.chatName, isGroup: true };
+            const validVeri = await userChat.findOneAndUpdate({employeeID: req.body.employeeID},{
+            $push: { chatVerify: veri}})
+            return validVeri;
+        } catch (err) {
+            return false;
+        }
+    }
+    return false;
+}
+
+exports.createGroup = async (req, res) => {
+    var chatName = await chatInfo.findOne({chatName: req.body.chatName})
+    if (chatName) {
+        return res.status(400).send({message: "Already has this group!"});
+    }
+    var group = await makeGroup(req);
+    if (!group) {
+        return res.status(400).send({message: "Error can't create group"});
+    }
+    var validChatVeri = await addChatVerify(req, group);
+    if (!validChatVeri) {
+        return res.status(400).send({message: "Error can not make chat verify"})
+    }
+    var send = await chatVerify(req);
+    return res.status(200).send({send});
 }

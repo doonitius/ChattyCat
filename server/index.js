@@ -65,7 +65,7 @@ io.on('connection', (socket) => {
         const user = userJoin(socket.id, username, room);
         console.log(user);
         socket.join(user.room);
-        var message = pastMessage(user).then((message) => {
+        pastMessage(user).then((message) => {
         //socket.emit('message', 'Hi user ' + user.username);
         console.log("---------")
         console.log(message)
@@ -89,8 +89,6 @@ io.on('connection', (socket) => {
         io.to(user.room).emit('message', user.username + ' disconnected');
     });
 });
-
-
 
 mongoose.connect(
     process.env.DB_CLUSTER, 
