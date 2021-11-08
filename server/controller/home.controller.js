@@ -104,7 +104,7 @@ exports.indivChat = async (req, res) => {
     if (!valid) {
         var validGroup = await createChat(req);  
         if (checkChatOne && checkChatTwo && validGroup) {                 
-            var validAdd = await addChatVerify(req, validGroup);
+            var validAdd = await addChatVerify(req, validGroup); 
             if (validAdd) {
                 var send = await chatVerify(req);
                 return res.status(200).send(send);
@@ -146,7 +146,7 @@ async function makeGroup(req) {
     }
 }
 
-async function addChatVerify(req, group) {
+async function addGroupChatVerify(req, group) {
     var validUserChat = await userChat.findOne({employeeID: req.body.employeeID})
     if (!validUserChat) {
         var validCreate = await createUserChat(req.body.employeeID);
@@ -173,7 +173,7 @@ exports.createGroup = async (req, res) => {
     if (!group) {
         return res.status(400).send({message: "Error can't create group"});
     }
-    var validChatVeri = await addChatVerify(req, group);
+    var validChatVeri = await addGroupChatVerify(req, group);
     if (!validChatVeri) {
         return res.status(400).send({message: "Error can not make chat verify"})
     }
