@@ -8,5 +8,4 @@ module.exports = function (app) {
     app.get('/home/origin', getRefreshTokens, verifyToken, controller.home,);
     app.get('/home/chat', getRefreshTokens, verifyToken,  controller.indivChat);
     app.post('/home/search', getRefreshTokens, verifyToken, controller.search);
-    app.post('/home/group/create', getRefreshTokens, verifyToken, controller.createGroup);
 }
