@@ -87,21 +87,50 @@ exports.search = async (req, res) => {
     }
 }
 
- // broken
+async function findMember (req) {
+    const existMember = await chatInfo.findOne({_id: req.body.chatID, member: {$elemMatch: {employeeID: req.body.targetID}}});
+    if (!existMember) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+async function addMember (req) {
+    try {
+        var mem = {employeeID: req.body.targetID};
+        const updateChat = await chatInfo.findOneAndUpdate({_id: req.body.chatID},
+            {$push : {member: mem}})
+        return updateChat;
+    } catch (err) {
+        return false;
+    }
+}
+
 exports.invite = async (req, res) => {
+    var existMember = await findMember(req);  
+    if (existMember) {
+        return res.status(400).send({message: 'Member already exist!'});
+    }
     var userCh = await userChat.findOne({employeeID: req.body.targetID})
     if (!userCh) {
         var validCreate = await createUserChat(req.body.targetID);
     }
     if (validCreate || userCh) {
+        var addedMember = await addMember(req);
+        if (!addedMember) {
+            return res.status(400).send({message: "Can't add member"});
+        }
         try {
             var veri = {chatID: req.body.chatID, chatName: req.body.chatName, isGroup: true };
-            const validVeri = await userChat.findOneAndUpdate({employeeID: req.body.targetID},{
-            $push: { chatVerify: veri}})
-            return res.status(200).send(validVeri);
+            const validVeri = await userChat.findOneAndUpdate({employeeID: req.body.targetID},
+                {$push: { chatVerify: veri}})
+            return res.status(200).send({messages: "Invite success!"});
         } catch (err) {
             return res.status(400).send({message: "Can't update user chat!!"});
         }
     }
-    return res.status(400).send({message: "ERROR!!"});
-}   
+    else {
+        return res.status(400).send({message: "ERROR!!"});
+    }
+}
