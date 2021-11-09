@@ -1,5 +1,6 @@
 const userChat = require('../model/userChat')
 const chatInfo = require('../model/chatInfo')
+const userPass = require('../model/userNamePass')
 
 async function createUserChat (emp) {
     const inChat = new userChat ({
@@ -58,6 +59,7 @@ async function chatVerify (req) {
     return send; 
 }
 
+// passed
 exports.createGroup = async (req, res) => {
     var chatName = await chatInfo.findOne({chatName: req.body.chatName})
     if (chatName) {
@@ -75,6 +77,7 @@ exports.createGroup = async (req, res) => {
     return res.status(200).send({send});
 }
 
+// passed
 exports.search = async (req, res) => {
     const searchName = await userPass.find({userName: { $regex: req.body.targetName,$options: 'i'}}, {"userName": 1, "employeeID": 1, "_id": 0});
     try {
@@ -101,4 +104,4 @@ exports.invite = async (req, res) => {
         }
     }
     return res.status(400).send({message: "ERROR!!"});
-}
+}   

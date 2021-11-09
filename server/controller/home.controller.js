@@ -127,6 +127,7 @@ exports.indivChat = async (req, res) => {
     }
 }
 
+// passed
 exports.search = async (req, res) => {
     const searchName = await userPass.find({userName: { $regex: req.body.targetName,$options: 'i'}}, {"userName": 1, "employeeID": 1, "_id": 0});
     const searchGroup = await chatInfo.find({chatName: { $regex: req.body.targetName,$options: 'i'}, isGroup: true}, {"chatName": 1});
