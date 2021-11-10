@@ -79,8 +79,15 @@ exports.createGroup = async (req, res) => {
 
 // passed
 exports.search = async (req, res) => {
-    const searchName = await userPass.find({userName: { $regex: req.body.targetName,$options: 'i'}}, {"userName": 1, "employeeID": 1, "_id": 0});
+    const user = await userPass.findOne({employeeID: req.body.employeeID})
     try {
+        const searchName = await userPass.find({userName: {$regex: req.body.targetName,$options: 'i'}}, 
+                                            {"userName": 1, "employeeID": 1, "_id": 0});
+        for (var i = 0; i < searchName.length; i++) {
+            if (searchName[i].userName == user.userName) {
+                searchName.splice(i, 1);
+            }
+        }
         return res.status(200).send({searchName});
     } catch {
         return res.status(400).send({message: "Erorr"});
