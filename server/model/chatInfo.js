@@ -1,9 +1,6 @@
 const mongoose = require('mongoose');
 
 const chatInfoSchema = mongoose.Schema({
-    chatID: {
-        type: String
-    },
     member: [{
         employeeID: String
     }],

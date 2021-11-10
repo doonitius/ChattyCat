@@ -8,7 +8,10 @@ const messageSchema = mongoose.Schema({
         text: String,
         sender: String,
         time: Date
-    }]
+    }],
+    count: {
+        type: Number
+    }
 })
 
 module.exports = mongoose.model('message', messageSchema);
