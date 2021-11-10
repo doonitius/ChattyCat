@@ -2,12 +2,6 @@ const message = require('../model/message')
 const userChat = require('../model/userChat')
 const chatInfo = require('../model/chatInfo')
 
-async function chatIn (chatID) {
-    const chat = await chatInfo.findOne({_id: chatID})
-    return chat.previewChat;
-}
-
-// front แบบไหน
 exports.allChat = async (req, res) => {
     var nomessage = [{text : "-", time: new Date}];
     var userChatVerify = await userChat.findOne({employeeID: req.body.employeeID}, { "_id": 0, "__v": 0, "employeeID": 0 });

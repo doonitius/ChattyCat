@@ -25,7 +25,6 @@ async function saveNewMessageRoom(user, msg){
         text: msg,
         sender: user.username,
         time: utc
-
     }
     ]
     });
@@ -75,7 +74,7 @@ async function pastMessage (user) {
     }
     message = messageChat.message;
     await message.sort((a,b)=> a.time > b.time && 1 || -1)
-
+    ///50ล่าง
     return message;
 }
 
