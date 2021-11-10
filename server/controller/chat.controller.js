@@ -10,8 +10,8 @@ exports.allChat = async (req, res) => {
         const chatinfo = await chatInfo.findOne({_id: userChatVerify.chatVerify[i].chatID});
         if(chatinfo === undefined) {console.log("sdfsdf");continue;}
         if (await chatinfo.previewChat.length === 0){
-            console.log(chatinfo.previewChat);
-            console.log("nononoon");
+            // console.log(chatinfo.previewChat);
+            // console.log("nononoon");
             Object.assign(chatinfo.previewChat, nomessage);
             // chatinfo.previewChat = " No ";
             // Object.keys(chatinfo.previewChat).map(
@@ -20,7 +20,7 @@ exports.allChat = async (req, res) => {
             //     }
             // );
             //chatinfo.previewChat.text = nomessage;
-            console.log(chatinfo.previewChat);
+            // console.log(chatinfo.previewChat);
         }
         
         // userChatVerify.chatVerify[i].previewChat = chatinfo.previewChat[0].text;
