@@ -46,7 +46,7 @@ io.on('connection', (socket) => {
     // var room = socket.handshake.query.room;
 
     // this one work good good now ok
-    socket.on("signin", ({id, targetId}) => {
+    socket.on("signin", (id, targetId) => {
         console.log("ID:" + id);
         clients[id] = socket;
         // console.log(clients);

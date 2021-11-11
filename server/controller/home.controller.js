@@ -127,12 +127,27 @@ exports.indivChat = async (req, res) => {
     }
 }
 
-// passed
+// bug
 exports.search = async (req, res) => {
-    const searchName = await userPass.find({userName: { $regex: req.body.targetName,$options: 'i'}}, {"userName": 1, "employeeID": 1, "_id": 0});
-    const searchGroup = await chatInfo.find({chatName: { $regex: req.body.targetName,$options: 'i'}, isGroup: true}, {"chatName": 1});
+    const user = await userPass.findOne({employeeID: req.body.employeeID})
+    const searchName = await userPass.find({userName: {$regex: req.body.targetName,$options: 'i'}}, 
+                                        {"userName": 1, "employeeID": 1, "_id": 0});
+    for (var i = 0; i < searchName.length; i++) {
+        if (searchName[i].userName == user.userName) {
+            searchName.splice(i, 1);
+        }
+    }
+    // ถ้าไม่มีlength
+    let groups = [];
+    const searchGroup = await userChat.findOne({employeeID: req.body.employeeID});
+    for (var i = 0; i < searchGroup.chatVerify.length; i++) {
+        if (searchGroup.chatVerify[i].isGroup == true){
+            groups.push(searchGroup.chatVerify[i].chatName);
+        }
+    }
+    //console.log(groups, searchName);
     try {
-        return res.status(200).send({searchName, searchGroup});
+        return res.status(200).send({searchName, groups});
     } catch {
         return res.status(400).send({message: "Erorr"});
     }
