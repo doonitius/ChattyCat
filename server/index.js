@@ -57,7 +57,8 @@ io.on('connection', (socket) => {
             //socket.emit('message', 'Hi user ' + user.username);
             console.log("---------")
             console.log(message);
-            io.to(user.room).emit('pastMessage', {message})
+            // messageJSON = Object.assign({}, message);
+            io.to(user.room).emit('pastMessage', message);
             socket.broadcast.to(user.room).emit('message', user.username + ' has joined')
             })
         // console.log(user);
