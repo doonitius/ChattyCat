@@ -5,6 +5,10 @@ const chatInfo = require('../model/chatInfo')
 exports.home = async (req, res) => {
     const user = await userPass.find({employeeID: {$ne: req.body.employeeID}}, { "_id": 0, "__v": 0, "password": 0})
     const group = await userChat.findOne({employeeID: req.body.employeeID})
+    if (group == null) {
+        var sendGroup = [];
+        return res.status(200).send({user,sendGroup});
+    }
     for (var i = 0; i < group.chatVerify.length; i++)
     {
         if (group.chatVerify[i].isGroup == false) {
@@ -137,15 +141,21 @@ exports.search = async (req, res) => {
             searchName.splice(i, 1);
         }
     }
-    // ถ้าไม่มีlength
     let groups = [];
-    const searchGroup = await userChat.findOne({employeeID: req.body.employeeID});
-    for (var i = 0; i < searchGroup.chatVerify.length; i++) {
-        if (searchGroup.chatVerify[i].isGroup == true){
-            groups.push(searchGroup.chatVerify[i].chatName);
+    const searchGroup = await chatInfo.find({chatName: { $regex: req.body.targetName,$options: 'i'}, isGroup: true}, {"chatName": 1});
+    const userGroup = await userChat.findOne({employeeID: req.body.employeeID});
+    if (userGroup == null) {
+        console.log(groups, searchName);
+        return res.status(200).send({searchName,groups});
+    }
+    for (var i = 0; i < userGroup.chatVerify.length; i++) {
+        for (var j = 0; j < searchGroup.length; j++) {
+            if (userGroup.chatVerify[i].isGroup == true && searchGroup[j].chatName == userGroup.chatVerify[i].chatName) {
+                groups.push(userGroup.chatVerify[i].chatName);
+            }
         }
     }
-    //console.log(groups, searchName);
+    console.log(groups, searchName);
     try {
         return res.status(200).send({searchName, groups});
     } catch {
