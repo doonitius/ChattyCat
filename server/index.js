@@ -56,8 +56,8 @@ io.on('connection', (socket) => {
         pastMessage(user).then((message) => {
             //socket.emit('message', 'Hi user ' + user.username);
             console.log("---------")
-            console.log(message)
-            socket.emit('message', message)
+            console.log(message);
+            io.to(user.room).emit('pastMessage', {message})
             socket.broadcast.to(user.room).emit('message', user.username + ' has joined')
             })
         // console.log(user);
