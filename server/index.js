@@ -45,7 +45,8 @@ io.on('connection', (socket) => {
     // var username = socket.handshake.query.username;
     // var room = socket.handshake.query.room;
 
-    // this one work good good now ok
+    // this one work good good now ok  
+    // have to be json when test post man okokokkok
     socket.on("signin", (id, targetId) => {
         console.log("ID:" + id);
         clients[id] = socket;
