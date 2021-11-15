@@ -47,7 +47,7 @@ io.on('connection', (socket) => {
 
     // this one work good good now ok  
     // have to be json when test post man okokokkok
-    socket.on("signin", (id, targetId) => {
+    socket.on("signin", ({id, targetId}) => {
         console.log("ID:" + id);
         clients[id] = socket;
         // console.log(clients);
@@ -88,8 +88,11 @@ io.on('connection', (socket) => {
         const user = getCurrentUser(socket.id);
         console.log(user);
         console.log("message " + msg);
-        savemessage(user, msg);
-        io.to(user.room).emit('chat message', msg);
+        savemessage(user, msg).then((mes) => {
+        console.log("-V-V-V-V-V-V-V-");
+        console.log(mes);
+        io.to(user.room).emit('chat message', mes);
+        })
     });
 
     socket.on('disconnect', () => {

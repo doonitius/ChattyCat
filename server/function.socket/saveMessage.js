@@ -9,7 +9,6 @@ async function saveToPreview (user, msg){
         var text = {text: msg, time: utc};
         var getChatInfo = await chatInfo.findOneAndUpdate({_id: user.room},
             {$set: {previewChat: text}});
-        console.log(getChatInfo);
     } catch(err){
         throw err;
     }
@@ -50,8 +49,14 @@ async function saveNewMessageRoom(user, msg, realUser){
 async function savemessage(user, msg) {
     var utc = new Date();
     utc.setHours( utc.getHours() + 7);
-    console.log(utc);
     const realUser = await userPass.findOne({employeeID: user.username});
+    console.log(realUser);
+    var newMes = {
+        text: msg,
+        sender: realUser.userName,
+        userID: realUser.employeeID,
+        time: utc
+    }
     try{
         var newMessage = {
             text: msg,
@@ -64,11 +69,13 @@ async function savemessage(user, msg) {
         if(!messageRoomExist){
             await saveNewMessageRoom(user, msg , realUser);
             await saveToPreview(user, msg);
-            return;
+            return newMes;
         }
         await addCount(user);
         await saveToPreview(user, msg);
-        return;
+        console.log("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
+        console.log(newMes);
+        return newMes;
     } catch (err) {
         console.log(err);
         return(err);
