@@ -5,6 +5,7 @@ const chatInfo = require('../model/chatInfo')
 exports.allChat = async (req, res) => {
     var nomessage = [{text : " ", time: new Date}];
     var userChatVerify = await userChat.findOne({employeeID: req.body.employeeID}, { "_id": 0, "__v": 0, "employeeID": 0 });
+    var user = await userChat.findOne({employeeID: req.body.employeeID}, {"employeeID": 1, "_id": 0});
     if(!userChatVerify){ res.status(400).send({messsage: "no chat"});}
     for (var i = 0; i < userChatVerify.chatVerify.length; i++) {
         const chatinfo = await chatInfo.findOne({_id: userChatVerify.chatVerify[i].chatID});
@@ -62,6 +63,8 @@ exports.allChat = async (req, res) => {
     // console.log(set);
     // console.log({userChatVerify});
     // console.log(json(userChatVerify));
+    console.log(user);
+    getUser = user.employeeID;
     getAllChat = userChatVerify.chatVerify;
-    return res.status(200).send({ getAllChat });
+    return res.status(200).send({ getAllChat, getUser });
 }

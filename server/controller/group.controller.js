@@ -130,7 +130,7 @@ exports.invite = async (req, res) => {
         }
         try {
             var veri = {chatID: req.body.chatID, chatName: req.body.chatName, isGroup: true };
-            const validVeri = await userChat.findOneAndUpdate({employeeID: req.body.targetID},
+        await userChat.findOneAndUpdate({employeeID: req.body.targetID},
                 {$push: { chatVerify: veri}})
             return res.status(200).send({messages: "Invite success!"});
         } catch (err) {
