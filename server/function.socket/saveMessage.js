@@ -96,7 +96,7 @@ async function pastMessage (user) {
     message = messageChat.message;
     await message.sort((a,b)=> a.time > b.time && 1 || -1)
     ///50ล่าง
-    return message;
+    return {message};
 }
 
 module.exports = {

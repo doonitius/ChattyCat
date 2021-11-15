@@ -21,18 +21,3 @@ exports.allChat = async (req, res) => {
     getAllChat = userChatVerify.chatVerify;
     return res.status(200).send({ getAllChat });
 }
-
-exports.pastChat = async (req, res) => {
-    var message;
-    const messageChat = await chatMessage.findOne({chatID: req.body.chatID}, {"_id": 0});
-    if(!messageChat){
-        return message = "start conversation";
-    }
-    // if (messageChat.count >= 50) {
-        
-    // }
-    message = messageChat.message;
-    await message.sort((a,b)=> a.time > b.time && 1 || -1)
-    ///50ล่าง
-    return res.status(200).send({message});
-}
