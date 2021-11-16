@@ -33,14 +33,15 @@ async function makeGroup(req) {
 
 async function addChatVerify(req, group) {
     var validUserChat = await userChat.findOne({employeeID: req.body.employeeID})
-    if (!validUserChat) {
+    if (!validUserChat) 
         var validCreate = await createUserChat(req.body.employeeID);
-    }
-    if (validCreate || validUserChat) {
+    
+    if (validCreate || validUserChat) 
+    {
         try {
             var veri = {chatID: group._id, chatName: req.body.chatName, isGroup: true };
-            const validVeri = await userChat.findOneAndUpdate({employeeID: req.body.employeeID},{
-            $push: { chatVerify: veri}})
+            const validVeri = await userChat.findOneAndUpdate({employeeID: req.body.employeeID},
+                {$push: { chatVerify: veri}})
             return validVeri;
         } catch (err) {
             return false;
@@ -51,42 +52,40 @@ async function addChatVerify(req, group) {
 
 async function chatVerify (req) {
     var valid = await userChat.findOne({employeeID: req.body.employeeID});
-    for (var i = 0; i < valid.chatVerify.length; i++) {
-        if (valid.chatVerify[i].chatName == req.body.chatName) {
+    for (var i = 0; i < valid.chatVerify.length; i++) 
+    {
+        if (valid.chatVerify[i].chatName == req.body.chatName) 
             var send = valid.chatVerify[i];
-        }
     }
     return send; 
 }
 
-// passed
 exports.createGroup = async (req, res) => {
     var chatName = await chatInfo.findOne({chatName: req.body.chatName})
-    if (chatName) {
+    if (chatName) 
         return res.status(400).send({message: "Already has this group!"});
-    }
+
     var group = await makeGroup(req);
-    if (!group) {
+    if (!group) 
         return res.status(400).send({message: "Error can't create group"});
-    }
+
     var validChatVeri = await addChatVerify(req, group);
-    if (!validChatVeri) {
+    if (!validChatVeri) 
         return res.status(400).send({message: "Error can not make chat verify"})
-    }
+    
     var send = await chatVerify(req);
     return res.status(200).send({send});
 }
 
-// passed
 exports.search = async (req, res) => {
     const user = await userPass.findOne({employeeID: req.body.employeeID})
     try {
         const searchName = await userPass.find({userName: {$regex: req.body.targetName,$options: 'i'}}, 
                                             {"userName": 1, "employeeID": 1, "_id": 0});
-        for (var i = 0; i < searchName.length; i++) {
-            if (searchName[i].userName == user.userName) {
+        for (var i = 0; i < searchName.length; i++) 
+        {
+            if (searchName[i].userName == user.userName) 
                 searchName.splice(i, 1);
-            }
         }
         return res.status(200).send({searchName});
     } catch {
@@ -116,28 +115,28 @@ async function addMember (req) {
 
 exports.invite = async (req, res) => {
     var existMember = await findMember(req);  
-    if (existMember) {
+    if (existMember) 
         return res.status(400).send({message: 'Member already exist!'});
-    }
-    var userCh = await userChat.findOne({employeeID: req.body.targetID})
-    if (!userCh) {
+
+    var userCh = await userChat.findOne({employeeID: req.body.targetID});
+    if (!userCh) 
         var validCreate = await createUserChat(req.body.targetID);
-    }
-    if (validCreate || userCh) {
+
+    if (validCreate || userCh) 
+    {
         var addedMember = await addMember(req);
-        if (!addedMember) {
+        if (!addedMember) 
             return res.status(400).send({message: "Can't add member"});
-        }
+
         try {
             var veri = {chatID: req.body.chatID, chatName: req.body.chatName, isGroup: true };
-        await userChat.findOneAndUpdate({employeeID: req.body.targetID},
-                {$push: { chatVerify: veri}})
+            await userChat.findOneAndUpdate({employeeID: req.body.targetID},
+                        {$push: { chatVerify: veri}})
             return res.status(200).send({messages: "Invite success!"});
         } catch (err) {
             return res.status(400).send({message: "Can't update user chat!!"});
         }
     }
-    else {
+    else 
         return res.status(400).send({message: "ERROR!!"});
-    }
 }

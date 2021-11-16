@@ -4,9 +4,8 @@ let refreshTokens = [];
 
 const verifyToken = (req, res, next) => {
     const token = req.body.token;
-    if (!token) {
+    if (!token) 
         return res.status(403).send("No token");
-    }
     jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
         if(err){
             return res.status(400).send("Invalid token");
@@ -16,17 +15,16 @@ const verifyToken = (req, res, next) => {
     })
 
 }
-// จะให้refreshตรงไหน
+
 const getRefreshTokens = (req, res, next) => {
     const refreshToken = req.headers['refresh-token'];
-    if (refreshTokens == null) {
+    if (refreshTokens == null) 
         return res.status(401).send("Error refresh null")
-    }
-    if (!refreshTokens.includes(refreshToken)) {
+    if (!refreshTokens.includes(refreshToken)) 
         return res.status(403).send("Error not have this token")
-    }
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
-        if (err) return res.send(400).send("Erorrrr");
+        if (err) 
+            return res.send(400).send("Erorrrr");
         const payload = {employeeID: user.employeeID};
         const token = jwt.sign(payload, process.env.TOKEN_SECRET , {
             expiresIn: 300

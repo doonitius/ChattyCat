@@ -14,19 +14,23 @@ exports.register = async (req, res) => {
     const validEmail = await profile.findOne({email: req.body.email});
     const validEmployeeID = await profile.findOne({employeeID: req.body.employeeID});
     var existFlag = false;
-    if (validName) {
+    if (validName) 
+    {
         res.write(JSON.stringify({userName :"UserName already exist!"}));
         existFlag = true;
     }
-    if(validEmail){
+    if(validEmail)
+    {
         res.write(JSON.stringify({ email: "Email already exist!" }));
         existFlag = true;
     }
-    if(validEmployeeID){
+    if(validEmployeeID)
+    {
         res.write(JSON.stringify({ employeeID: "EmployeeID already exist!" }));
         existFlag = true;
     }
-    if(existFlag){
+    if(existFlag)
+    {
         return res.end();
     }
     const profileInfo = new profile ({
@@ -34,9 +38,7 @@ exports.register = async (req, res) => {
         employeeID: req.body.employeeID
     });
     const hashedPass = await bcrypt.hash(req.body.password, 10)
-    const address = new addressData({
-        employeeID: req.body.employeeID,
-    })
+    const address = new addressData({employeeID: req.body.employeeID})
     const userNamePass = new userPass ({
         userName: req.body.userName,
         password: hashedPass,
@@ -54,22 +56,18 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
     const validName = await userPass.findOne({userName: req.body.userName});
-    if (!validName) {
+    if (!validName) 
         return res.status(400).send({Error: "Don't have this user!"})
-    }
-    const payload = { 
-        employeeID: validName.employeeID
-    };
-    if (await bcrypt.compare(req.body.password, validName.password)) {
-        const token = jwt.sign(payload, process.env.TOKEN_SECRET , {
-            expiresIn: 300  
-        });
+    const payload = {employeeID: validName.employeeID};
+    if (await bcrypt.compare(req.body.password, validName.password)) 
+    {
+        const token = jwt.sign(payload, process.env.TOKEN_SECRET,{expiresIn: 300  });
         const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET)
         setRefreshTokens(refreshToken);
         return res.status(200).header('auth-token', token).header('refresh-token',refreshToken).send({token,refreshToken})
-    } else {
+    } 
+    else
         res.status(400).send({Error: "Invalid password"})
-    }
 }
 
 exports.logout = async (req,res) => {
