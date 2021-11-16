@@ -85,7 +85,6 @@ async function savemessage(user, msg) {
 async function pastMessage (user) {
     console.log("-------Function------");
     console.log(user);
-    var message;
     const messageChat = await chatMessage.findOne({chatID: user.room}, {"_id": 0});
     if(!messageChat){
         return message = "start conversation";
@@ -93,10 +92,11 @@ async function pastMessage (user) {
     // if (messageChat.count >= 50) {
         
     // }
-    message = messageChat.message;
+    var message = messageChat.message;
     await message.sort((a,b)=> a.time > b.time && 1 || -1)
+    var e = JSON.stringify({message});
     ///50ล่าง
-    return {message};
+    return e;
 }
 
 module.exports = {
