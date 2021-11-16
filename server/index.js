@@ -8,12 +8,12 @@ const {
     userJoin,
     getCurrentUser,
     userLeave
-    } = require('./middleware/users.js');
+} = require('./middleware/users.js');
 const {
     savemessage,
     pastMessage
-    } = require('./function.socket/saveMessage');
-    
+} = require('./function.socket/saveMessage');
+
 
 require("dotenv").config();
 
@@ -55,21 +55,21 @@ io.on('connection', (socket) => {
         socket.join(user.room);
         // รับ count 
         pastMessage(user, count).then((message) => {
-            //socket.emit('message', 'Hi user ' + user.username);
-            console.log("---------")
-            console.log(message);
-            // messageJSON = Object.assign({}, message);
-            io.to(user.room).emit('pastMessage', message);
-            socket.broadcast.to(user.room).emit('message', user.username + ' has joined')
+                //socket.emit('message', 'Hi user ' + user.username);
+                console.log("---------")
+                console.log(message);
+                // messageJSON = Object.assign({}, message);
+                io.to(user.room).emit('pastMessage', message);
+                socket.broadcast.to(user.room).emit('message', user.username + ' has joined')
             })
-        // console.log(user);
+            // console.log(user);
     });
 
-    socket.on("message", (msg) => {
-        console.log(msg);
-        let targetId = msg.targetId;
-        if (clients[targetId]) clients[targetId].emit("message", msg);
-    });
+    // socket.on("message", (msg) => {
+    //     console.log(msg);
+    //     let targetId = msg.targetId;
+    //     if (clients[targetId]) clients[targetId].emit("message", msg);
+    // });
 
     // socket.on('joinRoom', () => {
     //     const user = userJoin(socket.id, username, room);
@@ -88,26 +88,27 @@ io.on('connection', (socket) => {
     socket.on('chat message', (msg) => {
         const user = getCurrentUser(socket.id);
         console.log(user);
-        console.log("message " + msg);
-        savemessage(user, msg).then((mes) => {
-        console.log("-V-V-V-V-V-V-V-");
-        console.log(mes);
-        io.to(user.room).emit('chat message', mes);
+        console.log("message " + msg.message);
+        savemessage(user, msg.message).then((mes) => {
+            console.log("-V-V-V-V-V-V-V-");
+            console.log(mes);
+            // io.to(user.room).emit('chat message', mes);
+            let targetId = msg.targetId;
+            if (clients[targetId]) clients[targetId].emit("chat message", msg);
         })
     });
 
     socket.on('disconnect', () => {
         const user = userLeave(socket.id);
         console.log("disconnected");
-        io.to(user.room).emit('message', user.username + ' disconnected');
+        // io.to(user.room).emit('message', user.username + ' disconnected');
     });
 });
 
 mongoose.connect(
-    process.env.DB_CLUSTER, 
-    {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
+    process.env.DB_CLUSTER, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
     }, () =>
     console.log('socket chat connected to DB')
 );
