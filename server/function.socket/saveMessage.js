@@ -79,28 +79,60 @@ async function savemessage(user, msg) {
     }
 }
 
+async function getMessage(c, count) {
+    var message;
+    var e;
+    var element;
+    var realMessage;
+    if (count.count - c == 0) {
+        message = await chatMessage.findOne({chatID: count.chatID}, {message : {$slice : -50}});
+        realMessage = message.message; 
+        c = c - 50;
+        return e = JSON.stringify({realMessage,c});
+    }
+    else if (c > 50){
+        element = count.count - c;
+        num = Number(element);
+        message = await chatMessage.findOne({chatID: count.chatID}, {message : {$slice : [-num, 50]}});
+        realMessage = message.message;
+        c = c - 50;
+        return e = JSON.stringify({realMessage,c});
+    }
+    else {
+        console.log(c);
+        num = Number(c);
+        console.log(num);
+        message = await chatMessage.findOne({chatID: count.chatID}, {message : {$slice : num }});
+        c = 0;
+        realMessage = message.message;
+        return e = JSON.stringify({realMessage,c});
+    }
+}
+
 async function pastMessage (user, c) {
     console.log("-------Function------");
     console.log(user);
     const messageChat = await chatMessage.findOne({chatID: user.room}, {"_id": 0});
+    var e;
+    var message;
     if(!messageChat){
         return message = "start conversation";
     }
-    var count;
+    var count = await chatMessage.findOne({chatID: user.room});
     if (c == -1){
-        count = await chatMessage.findOne({chatID: user.room}, {"count": 1})
+        c = count.count;
     }
-    // console.log(count);
-    // if (c > 50) {
-        
-    // }
-    // else {
-        var message = messageChat.message;
+    if (count.count > 50) {
+        message = getMessage(c, count);
+        return message;
+    }
+    else {
+        c = 0;
+        message = messageChat.message;
         await message.sort((a,b)=> a.time > b.time && 1 || -1)
-        var e = JSON.stringify({message});
-    // }
+        return e = JSON.stringify({message,c});
+    }
     ///50ล่าง ส่ง countด้วย
-    return e;
 }
 
 module.exports = {
