@@ -47,7 +47,7 @@ io.on('connection', (socket) => {
 
     // this one work good good now ok  
     // have to be json when test post man okokokkok
-    socket.on("signin", ({id, targetId, count}) => {
+    socket.on("signin", (id, targetId, count) => {
         console.log("ID:" + id);
         clients[id] = socket;
         // console.log(clients);
