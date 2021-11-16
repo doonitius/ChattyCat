@@ -51,12 +51,9 @@ async function savemessage(user, msg) {
     utc.setHours( utc.getHours() + 7);
     const realUser = await userPass.findOne({employeeID: user.username});
     console.log(realUser);
-    var newMes = {
-        text: msg,
-        sender: realUser.userName,
-        userID: realUser.employeeID,
-        time: utc
-    }
+    var newMes = msg;
+
+    // var eiei = JSON.stringify(newMes);
     try{
         var newMessage = {
             text: msg,
@@ -82,20 +79,27 @@ async function savemessage(user, msg) {
     }
 }
 
-async function pastMessage (user) {
+async function pastMessage (user, c) {
     console.log("-------Function------");
     console.log(user);
     const messageChat = await chatMessage.findOne({chatID: user.room}, {"_id": 0});
     if(!messageChat){
         return message = "start conversation";
     }
-    // if (messageChat.count >= 50) {
+    var count;
+    if (c == -1){
+        count = await chatMessage.findOne({chatID: user.room}, {"count": 1})
+    }
+    // console.log(count);
+    // if (c > 50) {
         
     // }
-    var message = messageChat.message;
-    await message.sort((a,b)=> a.time > b.time && 1 || -1)
-    var e = JSON.stringify({message});
-    ///50ล่าง
+    // else {
+        var message = messageChat.message;
+        await message.sort((a,b)=> a.time > b.time && 1 || -1)
+        var e = JSON.stringify({message});
+    // }
+    ///50ล่าง ส่ง countด้วย
     return e;
 }
 

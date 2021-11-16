@@ -131,7 +131,7 @@ exports.indivChat = async (req, res) => {
     }
 }
 
-// bug
+
 exports.search = async (req, res) => {
     const user = await userPass.findOne({employeeID: req.body.employeeID})
     const searchName = await userPass.find({userName: {$regex: req.body.targetName,$options: 'i'}}, 

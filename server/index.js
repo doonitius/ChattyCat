@@ -47,13 +47,14 @@ io.on('connection', (socket) => {
 
     // this one work good good now ok  
     // have to be json when test post man okokokkok
-    socket.on("signin", ({id, targetId}) => {
+    socket.on("signin", ({id, targetId, count}) => {
         console.log("ID:" + id);
         clients[id] = socket;
         // console.log(clients);
         const user = userJoin(socket.id, id, targetId);
         socket.join(user.room);
-        pastMessage(user).then((message) => {
+        // รับ count 
+        pastMessage(user, count).then((message) => {
             //socket.emit('message', 'Hi user ' + user.username);
             console.log("---------")
             console.log(message);
