@@ -89,11 +89,19 @@ async function chatVerify (req) {
     for (var i = 0; i < valid.chatVerify.length; i++) 
     {
         if (valid.chatVerify[i].chatName == req.body.chatName)
+        {
+            Object.keys(valid.chatVerify[i]).map(
+                function(object){
+                    valid.chatVerify[i][object]["employeeID"] = req.body.receiverID;
+                }
+            );
             var send = valid.chatVerify[i];
+        }
     }
     return send; 
 }
 
+//ส่งemployee ให้หน้าบ้าน
 exports.indivChat = async (req, res) => {
     var checkChatOne = await userChat.findOne({employeeID: req.body.employeeID})
     var checkChatTwo = await userChat.findOne({employeeID: req.body.receiverID})

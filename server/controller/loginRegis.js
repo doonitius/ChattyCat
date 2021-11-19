@@ -58,7 +58,7 @@ exports.login = async (req, res) => {
     const validName = await userPass.findOne({userName: req.body.userName});
     if (!validName) 
         return res.status(400).send({Error: "Don't have this user!"})
-    const payload = {employeeID: validName.employeeID};
+    const payload = {employeeID: validName.employeeID, userName: validName.userName};
     if (await bcrypt.compare(req.body.password, validName.password)) 
     {
         const token = jwt.sign(payload, process.env.TOKEN_SECRET,{expiresIn: 300  });
