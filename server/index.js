@@ -11,8 +11,11 @@ const {
 } = require('./middleware/users.js');
 const {
     savemessage,
-    pastMessage
+    saveNewMessage,
+    pastMessage,
+    // newPastMessage
 } = require('./function.socket/saveMessage');
+const newChatMessage = require('./model/newMessage');
 
 
 require("dotenv").config();
@@ -42,6 +45,75 @@ io.on('connection', (socket) => {
     // console.log(socket.handshake.query.username);
     // console.log(socket.handshake.query.room);
 
+    async function newGetMessage(c, count, room) {
+        var element;
+        if (count - c == 0) 
+        {
+            const message = await newChatMessage.find({chatID: room}).sort({"_id": -1}).limit(50);
+            for (var i = 0; i < message.length; i++)
+            {
+                socket.emit("loadUniqueChat", message[i]);
+                console.log(message[i]);
+            }
+            c = c - 50;
+            return c;
+        }
+        else if (c > 50)
+        {
+            element = count - c;
+            num = Number(element);
+            const message = await newChatMessage.find({chatID: room}).sort({"_id": -1}).skip(num).limit(50);
+            for (var i = 0; i < message.length; i++)
+            {
+                socket.emit("loadUniqueChat", message[i]);
+                console.log(message[i]);
+            }
+            c = c - 50;
+            return c;
+        }
+        else 
+        {
+            element = count - c;
+            num = Number(element);
+            const message = await chatMessage.findOne({chatID: room}).sort({"_id": -1}).skip(num);
+            for (var i = 0; i < message.length; i++)
+            {
+                socket.emit("loadUniqueChat", message[i]);
+                console.log(message[i]);
+            }
+            c = 0;
+            return c;
+        }
+    }
+    
+    async function newPastMessage (user, c) {
+        console.log("-------Function------");
+        console.log(user);
+        const messageChat = await newChatMessage.find({chatID: user.room}, {"_id": 0, "__v": 0}).sort({"_id": -1});
+        var message;
+        var room = user.room;
+        if(!messageChat)
+            return message = "start conversation";
+        var count = messageChat.length;
+        if (c == -1)
+            c = count;
+        if (count > 50) 
+        {
+            c = newGetMessage(c, count,room);
+            return c;
+        }
+        else 
+        {
+            c = 0;
+            for (var i = 0; i < messageChat.length; i++) 
+            {
+                socket.emit("loadUniqueChat", messageChat[i]);
+                console.log(messageChat[i]);
+            }
+            return c;
+        }
+    }
+
     // var username = socket.handshake.query.username;
     // var room = socket.handshake.query.room;
 
@@ -53,15 +125,24 @@ io.on('connection', (socket) => {
         // console.log(clients);
         const user = userJoin(socket.id, id, targetId);
         socket.join(user.room);
-        // รับ count 
-        pastMessage(user, count).then((message) => {
-                //socket.emit('message', 'Hi user ' + user.username);
-                console.log("---------")
-                console.log(message);
-                // messageJSON = Object.assign({}, message);
-                io.to(user.room).emit('pastMessage', message);
-                socket.broadcast.to(user.room).emit('message', user.username + ' has joined')
-            })
+        newPastMessage(user, count).then((c) => {
+            //socket.emit('message', 'Hi user ' + user.username);
+            console.log("---------")
+            console.log(c);
+            // messageJSON = Object.assign({}, message);
+            io.to(user.room).emit('pastMessage', c);
+            socket.broadcast.to(user.room).emit('message', user.username + ' has joined')
+        })
+
+        // pastMessage(user, count).then((message) => {
+        //         //socket.emit('message', 'Hi user ' + user.username);
+        //         console.log("---------")
+        //         console.log(message);
+        //         // messageJSON = Object.assign({}, message);
+        //         io.to(user.room).emit('pastMessage', message);
+        //         socket.broadcast.to(user.room).emit('message', user.username + ' has joined')
+        //     })
+
             // console.log(user);
     });
 
@@ -88,8 +169,8 @@ io.on('connection', (socket) => {
     socket.on('chat message', (msg) => {
         const user = getCurrentUser(socket.id);
         console.log(user);
-        console.log("message " + msg.message);
-        savemessage(user, msg.message).then((mes) => {
+        console.log("message " + msg);
+        saveNewMessage(user, msg).then((mes) => {
             console.log("-V-V-V-V-V-V-V-");
             console.log(mes);
             // io.to(user.room).emit('chat message', mes);
