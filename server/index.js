@@ -49,7 +49,9 @@ io.on('connection', (socket) => {
         var element;
         if (count - c == 0) 
         {
-            const message = await newChatMessage.find({chatID: room}).sort({"_id": -1}).limit(50);
+            element = count - 50; 
+            num = Number(element); 
+            const message = await newChatMessage.find({chatID: room}).sort({"_id": 1}).skip(num).limit(50);
             for (var i = 0; i < message.length; i++)
             {
                 socket.emit("loadUniqueChat", message[i]);
@@ -60,9 +62,9 @@ io.on('connection', (socket) => {
         }
         else if (c > 50)
         {
-            element = count - c;
+            element = c - 50;
             num = Number(element);
-            const message = await newChatMessage.find({chatID: room}).sort({"_id": -1}).skip(num).limit(50);
+            const message = await newChatMessage.find({chatID: room}).sort({"_id": 1}).skip(num).limit(50);
             for (var i = 0; i < message.length; i++)
             {
                 socket.emit("loadUniqueChat", message[i]);
@@ -73,9 +75,9 @@ io.on('connection', (socket) => {
         }
         else 
         {
-            element = count - c;
+            element = c;
             num = Number(element);
-            const message = await chatMessage.findOne({chatID: room}).sort({"_id": -1}).skip(num);
+            const message = await chatMessage.findOne({chatID: room}).sort({"_id": 1}).limit(num);
             for (var i = 0; i < message.length; i++)
             {
                 socket.emit("loadUniqueChat", message[i]);
@@ -89,7 +91,7 @@ io.on('connection', (socket) => {
     async function newPastMessage (user, c) {
         console.log("-------Function------");
         console.log(user);
-        const messageChat = await newChatMessage.find({chatID: user.room}, {"_id": 0, "__v": 0}).sort({"_id": -1});
+        const messageChat = await newChatMessage.find({chatID: user.room}, {"_id": 0, "__v": 0}).sort({"_id": 1});
         var message;
         var room = user.room;
         if(!messageChat)
