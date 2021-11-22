@@ -129,8 +129,6 @@ async function pastMessage (user, c) {
     }
 }
 
- // ลองดู //
- // เสดแล้วเหลือtest //
 async function saveNewMessage(user, msg) {
     var utc = new Date();
     utc.setHours( utc.getHours() + 7);
