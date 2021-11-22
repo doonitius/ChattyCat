@@ -19,7 +19,7 @@ exports.allChat = async (req, res) => {
 
         if(!userChatVerify.chatVerify[i].isGroup)
         {
-            const findEmpID = await userNamePass.findOne({userName: userChatVerify.chatVerify[i].chatName}, {"password": 0, "_id": 0});
+            const findEmpID = await userNamePass.findOne({userName: userChatVerify.chatVerify[i].chatName}, {"password": 0, "_id": 0, "__v": 0});
             if(await findEmpID === undefined)
             {
                 var foundEmpID = noEmpID;
@@ -36,7 +36,6 @@ exports.allChat = async (req, res) => {
                 userChatVerify.chatVerify[i][object]["employeeID"] = foundEmpID;
             }
         );
-
 
         if (await chatinfo.previewChat.length === 0)
             Object.assign(chatinfo.previewChat, nomessage);

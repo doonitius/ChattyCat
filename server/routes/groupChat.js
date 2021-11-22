@@ -1,8 +1,7 @@
 const controller = require('../controller/group.controller')
 const {verifyToken,
-    getRefreshTokens, 
-    setRefreshTokens,
-    logout} = require('../middleware/auth')
+    getRefreshTokens
+    } = require('../middleware/auth')
 
 module.exports = function (app) {
     app.post('/group/create', getRefreshTokens, verifyToken, controller.createGroup);
