@@ -9,7 +9,7 @@ exports.allChat = async (req, res) => {
     var userChatVerify = await userChat.findOne({employeeID: req.body.employeeID}, { "_id": 0, "__v": 0, "employeeID": 0 });
 
     if (!userChatVerify) 
-        res.status(400).send({messsage: "no chat"});
+        return res.status(400).send({messsage: "no chat"});
 
     for (var i = 0; i < userChatVerify.chatVerify.length; i++) 
     {

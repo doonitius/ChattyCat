@@ -106,7 +106,7 @@ async function chatVerify (req) {
     return send; 
 }
 
-//ส่งemployee ให้หน้าบ้าน
+
 exports.indivChat = async (req, res) => {
     var checkChatOne = await userChat.findOne({employeeID: req.body.employeeID})
     var checkChatTwo = await userChat.findOne({employeeID: req.body.receiverID})
@@ -145,7 +145,9 @@ exports.indivChat = async (req, res) => {
 }
 
 
-exports.search = async (req, res) => {
+exports.search = async (req, res) => { 
+    let groups = [];
+    var noUser = [{userName : "-", employeeID: "-"}];
     const user = await userPass.findOne({employeeID: req.body.employeeID})
     const searchName = await userPass.find({userName: {$regex: req.body.targetName,$options: 'i'}}, 
                                         {"userName": 1, "employeeID": 1, "_id": 0});
@@ -154,11 +156,18 @@ exports.search = async (req, res) => {
         if (searchName[i].userName == user.userName) 
             searchName.splice(i, 1);
     }
-    let groups = [];
+    if (searchName.length == 0)
+    {
+        Object.assign(searchName, noUser);
+    }
     const searchGroup = await chatInfo.find({chatName: { $regex: req.body.targetName,$options: 'i'}, isGroup: true}, {"chatName": 1});
     const userGroup = await userChat.findOne({employeeID: req.body.employeeID});
-    if (userGroup == null) 
+    if (userGroup == null || userGroup.chatVerify.length == 0) 
+    {
+        var noGroup = "-";
+        groups[0] = noGroup;
         return res.status(200).send({searchName,groups});
+    }
     for (var i = 0; i < userGroup.chatVerify.length; i++) 
     {
         for (var j = 0; j < searchGroup.length; j++) 
@@ -166,6 +175,10 @@ exports.search = async (req, res) => {
             if (userGroup.chatVerify[i].isGroup == true && searchGroup[j].chatName == userGroup.chatVerify[i].chatName) 
                 groups.push(userGroup.chatVerify[i].chatName);
         }
+    }
+    if (groups.length == 0) {
+        var noGroup = "-";
+        groups[0] = noGroup;
     }
     try {
         return res.status(200).send({searchName, groups});
