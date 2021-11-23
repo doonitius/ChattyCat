@@ -73,7 +73,6 @@ async function savemessage(user, msg) {
 
 async function getMessage(c, count) {
     var message;
-    var e;
     var element;
     var realMessage;
     if (count.count - c == 0) 
