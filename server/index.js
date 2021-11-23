@@ -10,10 +10,7 @@ const {
     userLeave
 } = require('./middleware/users.js');
 const {
-    savemessage,
-    saveNewMessage,
-    pastMessage,
-    // newPastMessage
+    saveNewMessage
 } = require('./function.socket/saveMessage');
 const newChatMessage = require('./model/newMessage');
 
@@ -97,15 +94,15 @@ io.on('connection', (socket) => {
         if(!messageChat)
             return message = "start conversation";
         var count = messageChat.length;
-        if (c == -1)
-            c = count;
-        if (count > 50) 
-        {
-            c = newGetMessage(c, count,room);
-            return c;
-        }
-        else 
-        {
+        // if (c == -1)
+        //     c = count;
+        // if (count > 50) 
+        // {
+        //     c = newGetMessage(c, count,room);
+        //     return c;
+        // }
+        // else 
+        // {
             c = 0;
             for (var i = 0; i < messageChat.length; i++) 
             {
@@ -113,7 +110,7 @@ io.on('connection', (socket) => {
                 console.log(messageChat[i]);
             }
             return c;
-        }
+        // }
     }
 
     // var username = socket.handshake.query.username;
@@ -171,8 +168,8 @@ io.on('connection', (socket) => {
     socket.on('chat message', (msg) => {
         const user = getCurrentUser(socket.id);
         console.log(user);
-        console.log("message " + msg);
-        saveNewMessage(user, msg).then((mes) => {
+        console.log("message " + msg.message);
+        saveNewMessage(user, msg.message).then((mes) => {
             console.log("-V-V-V-V-V-V-V-");
             console.log(mes);
             // io.to(user.room).emit('chat message', mes);

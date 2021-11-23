@@ -1,4 +1,3 @@
-const message = require('../model/message')
 const userChat = require('../model/userChat')
 const chatInfo = require('../model/chatInfo')
 const userNamePass = require('../model/userNamePass')
