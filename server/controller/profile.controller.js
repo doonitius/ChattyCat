@@ -68,7 +68,6 @@ async function checkAddressNull(data) {
     return data;
 }
 
-// รวมview สองแบบเข้าด้วยกัน
 exports.view = async (req, res) => {
     const viewProfile = await profile.findOne({employeeID: req.body.employeeID}, { "_id": 0, "__v": 0 });
     const viewAddress = await addressData.findOne({employeeID: req.body.employeeID}, { "_id": 0, "__v": 0, "employeeID": 0 });

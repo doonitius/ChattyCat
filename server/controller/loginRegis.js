@@ -3,9 +3,7 @@ const userPass = require('../model/userNamePass')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const addressData = require('../model/address')
-const {verifyToken,
-    getRefreshTokens, 
-    setRefreshTokens,
+const {setRefreshTokens,
     logout} = require('../middleware/auth')
 require('dotenv').config()
 

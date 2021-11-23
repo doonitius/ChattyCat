@@ -14,7 +14,6 @@ app.use(express.json());
 const server = http.createServer(app);
 
 require("./routes/loginRegis")(app);
-// require("./routes/authRoute")(app);
 require("./routes/profile.route")(app);
 require("./routes/home")(app);
 require("./routes/chat")(app);

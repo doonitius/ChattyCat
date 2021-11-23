@@ -1,10 +1,8 @@
 const controller = require('../controller/home.controller')
 const {
     verifyToken,
-    getRefreshTokens,
-    setRefreshTokens,
-    logout
-} = require('../middleware/auth')
+    getRefreshTokens
+    } = require('../middleware/auth')
 
 module.exports = function(app) {
     app.get('/home/origin', getRefreshTokens, verifyToken, controller.home, );
