@@ -1,5 +1,6 @@
 const profile = require('../model/profile')
 const addressData = require('../model/address')
+const path = require('path')
 
 async function editProfile(req) {
     try {
@@ -98,4 +99,23 @@ exports.viewOther = async (req, res) => {
     } catch (err) { 
         res.status(400).send(err); 
     }
+}
+
+exports.addImage = async (req, res) => {
+    await profile.findOneAndUpdate({employeeID: req.body.employeeID},
+        {$set: {
+            image: req.file.path
+            }
+        },
+        {new: true},
+        (err,profile) =>{
+        if (err)
+            return res.status(500).send(err);
+        const response = {
+            message: "image added successfully updated",
+            data: profile
+        }
+        return res.status(200).send(response);
+        }
+    );
 }

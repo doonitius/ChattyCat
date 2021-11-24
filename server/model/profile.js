@@ -24,6 +24,10 @@ const profileSchema = mongoose.Schema({
     },
     positionID: {
         type: String
+    },
+    image: {
+        type: String,
+        default: ""
     }
 })
 
