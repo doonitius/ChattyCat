@@ -13,9 +13,15 @@ exports.home = async (req, res) => {
     for (var i = 0; i < group.chatVerify.length; i++)
     {
         if (!group.chatVerify[i].isGroup)
+        {
+            console.log(group.chatVerify[i]);
             group.chatVerify.splice(i, 1);
+            i = i - 1;
+        }
     }
     var sendGroup = group.chatVerify;
+    console.log("-----------------");
+    console.log(sendGroup);
     try {
         return res.status(200).send({user,sendGroup});
     } catch (err) {
