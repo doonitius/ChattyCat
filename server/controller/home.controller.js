@@ -7,22 +7,17 @@ exports.home = async (req, res) => {
     const group = await userChat.findOne({employeeID: req.body.employeeID})
     if (group == null) 
     {
-        var sendGroup = [];
-        return res.status(200).send({user,sendGroup});
+        var groups = [];
+        return res.status(200).send({user,groups});
     }
-    console.log(group.chatVerify.length);
-    console.log(group);
     for (var i = 0; i < group.chatVerify.length; i++)
     {
-        console.log(i);
-        console.log(group.chatVerify[i]);
         if (!group.chatVerify[i].isGroup)
             group.chatVerify.splice(i, 1);
-            i = i - 1;
     }
-    var sendGroup = group.chatVerify;
+    var groups = group.chatVerify;
     try {
-        return res.status(200).send({user,sendGroup});
+        return res.status(200).send({user,groups});
     } catch (err) {
         return res.status(500).send({message: "Error"})
     }
