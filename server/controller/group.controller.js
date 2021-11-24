@@ -140,3 +140,19 @@ exports.invite = async (req, res) => {
     else 
         return res.status(400).send({message: "ERROR!!"});
 }
+
+exports.group = async (req, res) => {
+    const chat = await chatInfo.findOne({_id: req.body.chatID}, {"member": 1})
+    let members = [];
+    for (var i = 0; i < chat.member.length; i++)
+    {
+        const member = await userPass.findOne({employeeID: chat.member[i].employeeID}, {"employeeID": 1, "userName": 1})
+        members.push(member);
+    }
+    console.log(members)
+    try {
+        return res.status(200).send(members);
+    } catch {
+        return res.status(400).send({message: "Erorr"});
+    }
+}

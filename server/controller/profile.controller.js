@@ -101,10 +101,11 @@ exports.viewOther = async (req, res) => {
     }
 }
 
+//can't find path
 exports.addImage = async (req, res) => {
     await profile.findOneAndUpdate({employeeID: req.body.employeeID},
         {$set: {
-            image: req.file.path
+            image: req.file.path //
             }
         },
         {new: true},
