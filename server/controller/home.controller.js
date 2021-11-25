@@ -2,6 +2,8 @@ const userPass = require('../model/userNamePass')
 const userChat = require('../model/userChat')
 const chatInfo = require('../model/chatInfo')
 
+// This function use to find all the user in the app //
+// and list of the group that user are in //
 exports.home = async (req, res) => {
     const user = await userPass.find({employeeID: {$ne: req.body.employeeID}}, { "_id": 0, "__v": 0, "password": 0})
     const group = await userChat.findOne({employeeID: req.body.employeeID})
@@ -29,6 +31,9 @@ exports.home = async (req, res) => {
     }
 }
 
+// function to create document in database that list
+// chat of the user //
+// duplicate //
 async function createUserChat (emp) {
     const inChat = new userChat ({employeeID: emp})
     try {
@@ -39,6 +44,8 @@ async function createUserChat (emp) {
     }
 }
 
+// function to create document in database that store //
+// information about the chat of user with another user //
 async function createChat(req) {
     const chat = new chatInfo ({
         member: [{employeeID : req.body.receiverID }],
@@ -57,6 +64,7 @@ async function createChat(req) {
     }
 }
 
+// function to add chat to the list of user //
 async function addChatOne (req, check) {
     try {
         var veri = {chatID: check._id, chatName: req.body.chatName, isGroup: false };
@@ -68,6 +76,7 @@ async function addChatOne (req, check) {
     }
 }
 
+// function to add chat to the list of another user // 
 async function addChatTwo (req, check) {
     const checkName = await userPass.findOne({employeeID: req.body.employeeID})
     var name = checkName.userName;
@@ -81,6 +90,7 @@ async function addChatTwo (req, check) {
     }
 }
 
+// function to add chat to the list of two user //
 async function addChatVerify (req, check) {
     var addedChatOne = await addChatOne(req,check);
     var addedChatTwo = await addChatTwo(req,check);
@@ -90,6 +100,8 @@ async function addChatVerify (req, check) {
         return 0; 
 }
 
+// This function use to find chat in the list of user //
+// and add employeeID of another user to the object //
 async function chatVerify (req) {
     var valid = await userChat.findOne({employeeID: req.body.employeeID});
     for (var i = 0; i < valid.chatVerify.length; i++) 
@@ -107,7 +119,9 @@ async function chatVerify (req) {
     return send; 
 }
 
-
+// function to check if the users have chat list or not //
+// if not create for them and send information of that chat //
+// to front-end // 
 exports.indivChat = async (req, res) => {
     var checkChatOne = await userChat.findOne({employeeID: req.body.employeeID})
     var checkChatTwo = await userChat.findOne({employeeID: req.body.receiverID})
@@ -145,7 +159,8 @@ exports.indivChat = async (req, res) => {
     }
 }
 
-
+// The function that use to find users that are similar to what //
+// user input and the user's groups that are similar to the input//
 exports.search = async (req, res) => { 
     let groups = [];
     const user = await userPass.findOne({employeeID: req.body.employeeID})

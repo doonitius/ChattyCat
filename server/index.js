@@ -42,49 +42,50 @@ io.on('connection', (socket) => {
     // console.log(socket.handshake.query.username);
     // console.log(socket.handshake.query.room);
 
-    async function newGetMessage(c, count, room) {
-        var element;
-        if (count - c == 0) 
-        {
-            element = count - 50; 
-            num = Number(element); 
-            const message = await newChatMessage.find({chatID: room}).sort({"_id": 1}).skip(num).limit(50);
-            for (var i = 0; i < message.length; i++)
-            {
-                socket.emit("loadUniqueChat", message[i]);
-                console.log(message[i]);
-            }
-            c = c - 50;
-            return c;
-        }
-        else if (c > 50)
-        {
-            element = c - 50;
-            num = Number(element);
-            const message = await newChatMessage.find({chatID: room}).sort({"_id": 1}).skip(num).limit(50);
-            for (var i = 0; i < message.length; i++)
-            {
-                socket.emit("loadUniqueChat", message[i]);
-                console.log(message[i]);
-            }
-            c = c - 50;
-            return c;
-        }
-        else 
-        {
-            element = c;
-            num = Number(element);
-            const message = await chatMessage.findOne({chatID: room}).sort({"_id": 1}).limit(num);
-            for (var i = 0; i < message.length; i++)
-            {
-                socket.emit("loadUniqueChat", message[i]);
-                console.log(message[i]);
-            }
-            c = 0;
-            return c;
-        }
-    }
+    // async function newGetMessage(c, count, room) {
+    //     var element;
+    //     if (count - c == 0) 
+    //     {
+    //         element = count - 50; 
+    //         num = Number(element); 
+    //         const message = await newChatMessage.find({chatID: room}).sort({"_id": 1}).skip(num).limit(50);
+    //         for (var i = 0; i < message.length; i++)
+    //         {
+    //             socket.emit("loadUniqueChat", message[i]);
+    //             console.log(message[i]);
+    //         }
+    //         c = c - 50;
+    //         return c;
+    //     }
+    //     else if (c > 50)
+    //     {
+    //         element = c - 50;
+    //         num = Number(element);
+    //         const message = await newChatMessage.find({chatID: room}).sort({"_id": 1}).skip(num).limit(50);
+    //         for (var i = 0; i < message.length; i++)
+    //         {
+    //             socket.emit("loadUniqueChat", message[i]);
+    //             console.log(message[i]);
+    //         }
+    //         c = c - 50;
+    //         return c;
+    //     }
+    //     else 
+    //     {
+    //         element = c;
+    //         num = Number(element);
+    //         const message = await chatMessage.findOne({chatID: room}).sort({"_id": 1}).limit(num);
+    //         for (var i = 0; i < message.length; i++)
+    //         {
+    //             socket.emit("loadUniqueChat", message[i]);
+    //             console.log(message[i]);
+    //         }
+    //         c = 0;
+    //         return c;
+    //     }
+    // }
     
+    // function sending past message of the chat //
     async function newPastMessage (user, c) {
         console.log("-------Function------");
         console.log(user);

@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 
 let refreshTokens = [];
 
+// function to verify the token //
 const verifyToken = (req, res, next) => {
     const token = req.body.token;
     if (!token) 
@@ -16,6 +17,7 @@ const verifyToken = (req, res, next) => {
 
 }
 
+// function to check if we have refresh-token or not //
 const getRefreshTokens = (req, res, next) => {
     const refreshToken = req.headers['refresh-token'];
     if (refreshTokens == null) 

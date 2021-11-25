@@ -2,6 +2,9 @@ const userChat = require('../model/userChat')
 const chatInfo = require('../model/chatInfo')
 const userPass = require('../model/userNamePass')
 
+// function to create document in database that list
+// chat of the user //
+// duplicate //
 async function createUserChat (emp) {
     const inChat = new userChat ({
         employeeID: emp
@@ -14,6 +17,8 @@ async function createUserChat (emp) {
     }
 }
 
+// function to create document in database that store //
+// information about the group chat //
 async function makeGroup(req) {
     const newGroup = new chatInfo({
         member: [{
@@ -31,6 +36,7 @@ async function makeGroup(req) {
     }
 }
 
+// function to add group into the chat list of the user // 
 async function addChatVerify(req, group) {
     var validUserChat = await userChat.findOne({employeeID: req.body.employeeID})
     if (!validUserChat) 
@@ -50,6 +56,7 @@ async function addChatVerify(req, group) {
     return false;
 }
 
+// This function use to find chat in the list of user// 
 async function chatVerify (req) {
     var valid = await userChat.findOne({employeeID: req.body.employeeID});
     for (var i = 0; i < valid.chatVerify.length; i++) 
@@ -60,6 +67,7 @@ async function chatVerify (req) {
     return send; 
 }
 
+// This function use to create group chat for user //
 exports.createGroup = async (req, res) => {
     var chatName = await chatInfo.findOne({chatName: req.body.chatName})
     if (chatName) 
@@ -77,6 +85,7 @@ exports.createGroup = async (req, res) => {
     return res.status(200).send({send});
 }
 
+// This function use to search user that user wants to invite to the group //
 exports.search = async (req, res) => {
     const user = await userPass.findOne({employeeID: req.body.employeeID})
     try {
@@ -113,6 +122,7 @@ async function addMember (req) {
     }
 }
 
+// This function use to invite the user to group chat //
 exports.invite = async (req, res) => {
     var existMember = await findMember(req);  
     if (existMember) 
@@ -141,6 +151,7 @@ exports.invite = async (req, res) => {
         return res.status(400).send({message: "ERROR!!"});
 }
 
+// This function use to display all the members of the group //
 exports.group = async (req, res) => {
     const chat = await chatInfo.findOne({_id: req.body.chatID}, {"member": 1})
     let members = [];

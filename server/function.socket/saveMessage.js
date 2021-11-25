@@ -2,6 +2,8 @@ const chatInfo = require('../model/chatInfo');
 const userPass = require('../model/userNamePass');
 const newChatMessage = require('../model/newMessage');
 
+// function to store the lastest chat message in //
+// chat information database //
 async function saveToPreview (user, msg){
     var utc = new Date();
     utc.setHours( utc.getHours() + 7);
@@ -13,6 +15,7 @@ async function saveToPreview (user, msg){
     }
 }
 
+// function to store new message in the database //
 async function saveNewMessage(user, msg) {
     var utc = new Date();
     utc.setHours( utc.getHours() + 7);

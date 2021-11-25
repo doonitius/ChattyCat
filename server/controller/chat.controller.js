@@ -2,6 +2,7 @@ const userChat = require('../model/userChat')
 const chatInfo = require('../model/chatInfo')
 const userNamePass = require('../model/userNamePass')
 
+// This function is use to display all the chat that user have //
 exports.allChat = async (req, res) => {
     var nomessage = [{text : " ", time: new Date}];
     var noEmpID = "-";

@@ -33,6 +33,8 @@ async function editAddress(req) {
     }
 }
 
+// use to call function to edit the profile and //
+// address of user //
 exports.edit =  (req, res) => {
     var editProfileDone = editProfile(req);
     var editAdderessDone = editAddress(req);
@@ -43,6 +45,7 @@ exports.edit =  (req, res) => {
 
 }
 
+// use to check null of profile //
 async function checkProfileNull(data) {
     const noData = "-";
     if (data.employeeID == null) 
@@ -57,7 +60,8 @@ async function checkProfileNull(data) {
         data.userLName = noData;
     return data;
 }
-
+ 
+// use to check null of address //
 async function checkAddressNull(data) {
     const noData = "-";
     if (data.city == null) 
@@ -69,6 +73,7 @@ async function checkAddressNull(data) {
     return data;
 }
 
+// function use to view the profile //
 exports.view = async (req, res) => {
     const viewProfile = await profile.findOne({employeeID: req.body.employeeID}, { "_id": 0, "__v": 0 });
     const viewAddress = await addressData.findOne({employeeID: req.body.employeeID}, { "_id": 0, "__v": 0, "employeeID": 0 });
@@ -85,6 +90,7 @@ exports.view = async (req, res) => {
     }
 }
 
+// function use to view other profile //
 exports.viewOther = async (req, res) => {
     const viewOtherProfile = await profile.findOne({employeeID: req.body.targetID}, { "_id": 0, "__v": 0 });
     const viewOtherAddress = await addressData.findOne({employeeID: req.body.targetID}, { "_id": 0, "__v": 0, "employeeID": 0 });
@@ -101,7 +107,7 @@ exports.viewOther = async (req, res) => {
     }
 }
 
-
+// function to add image of user //
 exports.addImage = async (req, res) => {
     console.log(req.file);
     console.log(req.body);
