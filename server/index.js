@@ -25,7 +25,7 @@ app.use(express.json());
 const server = http.createServer(app);
 const io = socketio(server);
 
-require("./apiServer");
+// require("./apiServer");
 
 app.get('/check', (req, res) => {
     res.status(200).send("You are now accessing Chat API");
