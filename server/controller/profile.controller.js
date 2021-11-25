@@ -101,22 +101,23 @@ exports.viewOther = async (req, res) => {
     }
 }
 
-//can't find path
+
 exports.addImage = async (req, res) => {
+    console.log(req.file);
+    console.log(req.body);
     await profile.findOneAndUpdate({employeeID: req.body.employeeID},
         {$set: {
-            image: req.file.path //
+            image: req.file.path 
             }
         },
-        {new: true},
-        (err,profile) =>{
-        if (err)
-            return res.status(500).send(err);
+        { new: true},
+        (err, imageProfile) => {
+        if (err) 
+            return  res.status(400).send(err);
         const response = {
             message: "image added successfully updated",
-            data: profile
-        }
+            data: imageProfile
+        };
         return res.status(200).send(response);
-        }
-    );
+        })
 }
