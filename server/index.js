@@ -26,6 +26,11 @@ const server = http.createServer(app);
 const io = socketio(server);
 
 // require("./apiServer");
+require("./routes/loginRegis")(app);
+require("./routes/profile.route")(app);
+require("./routes/home")(app);
+require("./routes/chat")(app);
+require("./routes/groupChat")(app);
 
 app.get('/check', (req, res) => {
     res.status(200).send("You are now accessing Chat API");
