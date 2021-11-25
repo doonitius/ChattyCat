@@ -48,6 +48,7 @@ exports.edit =  (req, res) => {
 // use to check null of profile //
 async function checkProfileNull(data) {
     const noData = "-";
+    Object.values(data).forEach(val => console.log(val.tel));
     if (data.employeeID == null) 
         data.employeeID = noData;
     if (data.email == null) 

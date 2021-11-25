@@ -33,7 +33,6 @@ exports.home = async (req, res) => {
 
 // function to create document in database that list
 // chat of the user //
-// duplicate //
 async function createUserChat (emp) {
     const inChat = new userChat ({employeeID: emp})
     try {
