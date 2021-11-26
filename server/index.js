@@ -89,15 +89,15 @@ io.on('connection', (socket) => {
     //         return c;
     //     }
     // }
-    
+
     // function sending past message of the chat //
-    async function newPastMessage (user, c) {
+    async function newPastMessage(user, c) {
         console.log("-------Function------");
         console.log(user);
-        const messageChat = await newChatMessage.find({chatID: user.room}, {"_id": 0, "__v": 0}).sort({"_id": 1});
+        const messageChat = await newChatMessage.find({ chatID: user.room }, { "_id": 0, "__v": 0 }).sort({ "_id": 1 });
         var message;
         var room = user.room;
-        if(!messageChat)
+        if (!messageChat)
             return message = "start conversation";
         var count = messageChat.length;
         // if (c == -1)
@@ -109,13 +109,12 @@ io.on('connection', (socket) => {
         // }
         // else 
         // {
-            c = 0;
-            for (var i = 0; i < messageChat.length; i++) 
-            {
-                socket.emit("loadUniqueChat", messageChat[i]);
-                console.log(messageChat[i]);
-            }
-            return c;
+        c = 0;
+        for (var i = 0; i < messageChat.length; i++) {
+            socket.emit("loadUniqueChat", messageChat[i]);
+            console.log(messageChat[i]);
+        }
+        return c;
         // }
     }
 
@@ -148,7 +147,7 @@ io.on('connection', (socket) => {
         //         socket.broadcast.to(user.room).emit('message', user.username + ' has joined')
         //     })
 
-            // console.log(user);
+        // console.log(user);
     });
 
     // socket.on("message", (msg) => {
@@ -181,6 +180,17 @@ io.on('connection', (socket) => {
             // io.to(user.room).emit('chat message', mes);
             let targetId = msg.targetId;
             if (clients[targetId]) clients[targetId].emit("chat message", msg);
+        })
+    });
+
+    socket.on('group message', (msg) => {
+        const user = getCurrentUser(socket.id);
+        console.log(user);
+        console.log("message " + msg.message);
+        saveNewMessage(user, msg.message).then((mes) => {
+            console.log("-V-V-V-V-V-V-V-");
+            console.log(mes);
+            io.to(user.room).emit('chat message', msg);
         })
     });
 
