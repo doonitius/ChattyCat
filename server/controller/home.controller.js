@@ -171,20 +171,23 @@ exports.search = async (req, res) => {
             searchName.splice(i, 1);
     }
     const searchGroup = await chatInfo.find({chatName: { $regex: req.body.targetName,$options: 'i'}, isGroup: true}, {"chatName": 1});
-    const userGroup = await userChat.findOne({employeeID: req.body.employeeID});
+    const userGroup = await userChat.findOne({employeeID: req.body.employeeID}, {chatVerify: {"_id": 0}});
     if (userGroup == null || userGroup.chatVerify.length == 0) 
     {
         return res.status(200).send({searchName,groups});
     }
+    // console.log(userGroup.chatVerify);
     for (var i = 0; i < userGroup.chatVerify.length; i++) 
     {
         for (var j = 0; j < searchGroup.length; j++) 
         {
             if (userGroup.chatVerify[i].isGroup == true && searchGroup[j].chatName == userGroup.chatVerify[i].chatName) 
-                groups.push(userGroup.chatVerify[i].chatName);
+                // console.log(userGroup.chatVerify[i].chatID);
+                groups.push(userGroup.chatVerify[i]);
         }
     }
     try {
+        console.log(groups);
         return res.status(200).send({searchName, groups});
     } catch {
         return res.status(400).send({message: "Erorr"});
