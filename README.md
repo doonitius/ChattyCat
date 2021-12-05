@@ -1,4 +1,4 @@
-# ChattyCat
+# Arumjoh Backend
 
 This repository is already hosted in heroku
 Check if it's working https://chattycat-heroku.herokuapp.com/check
